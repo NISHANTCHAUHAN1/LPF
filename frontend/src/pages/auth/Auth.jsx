@@ -25,10 +25,28 @@ const Auth = () => {
 
   // console.log(signUpFormData);
   
-
   const handleTabChange = (value) => {
     setActiveTab(value);
   };
+
+  function checkIfSignInFormIsValid() {
+    return (
+      signInFormData &&
+      signInFormData.userEmail !== "" &&
+      signInFormData.password !== ""
+    );
+  }
+
+  function checkIfSignUpFormIsValid() {
+    return (
+      signUpFormData &&
+      signUpFormData.userName !== "" &&
+      signUpFormData.userEmail !== "" &&
+      signUpFormData.password !== ""
+    );
+  }
+
+
   return (
     <div className="flex flex-col min-h-screen">
       <header className="px-4 lg:px-6 h-14 flex items-center border-b">
@@ -63,6 +81,7 @@ const Auth = () => {
                   buttonText={"Sign In"}
                   formData={signInFormData}
                   setFormData={setSignInFormData}
+                  isButtonDisabled={!checkIfSignInFormIsValid()}
                 />
               </CardContent>
             </Card>
@@ -81,6 +100,7 @@ const Auth = () => {
                   buttonText={"Sign Up"}
                   formData={signUpFormData}
                   setFormData={setSignUpFormData}
+                  isButtonDisabled={!checkIfSignUpFormIsValid()}
                 />
               </CardContent>
             </Card>
