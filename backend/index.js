@@ -24,7 +24,9 @@ app.use(express.json()); // data pass for register and login
 app.use(cookieParser()); // npm cookie cookies pass for profile
 
 // import routing
+import authRoute from './routes/authRoute/index.js';
 
+app.use("/auth", authRoute);
 
 
 app.use((err, req, res, next) => {
