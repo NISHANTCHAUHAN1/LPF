@@ -22,6 +22,8 @@ const Auth = () => {
     signUpFormData,
     setSignUpFormData,
     handleRegister,
+    handleLoginUser,
+    
   } = useContext(AuthContext);
 
   // console.log(signUpFormData);
@@ -83,6 +85,7 @@ const Auth = () => {
                   formData={signInFormData}
                   setFormData={setSignInFormData}
                   isButtonDisabled={!checkIfSignInFormIsValid()}
+                  handleSubmit={handleLoginUser}
                 />
               </CardContent>
             </Card>
