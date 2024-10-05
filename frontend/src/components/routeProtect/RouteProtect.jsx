@@ -3,7 +3,7 @@ import { Navigate, useLocation } from "react-router-dom";
 
 function RouteProtected({ authenticate, user, element }) {
   const location = useLocation();
-
+  
   if (!authenticate && !location.pathname.includes("/auth")) {
     return <Navigate to="/auth" />;
   }
