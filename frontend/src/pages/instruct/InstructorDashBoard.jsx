@@ -67,7 +67,7 @@ const InstructorDashBoard = () => {
           {/* menuItem null nahi hoga tha content show hoga like dashboard or courses or nuull hoga toh kuch nhi like logout */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             {menuItems.map((menuItem) => (
-              <TabsContent value={menuItem.value}>
+              <TabsContent value={menuItem.value} key={menuItem.value}>
                 {menuItem.component !== null ? menuItem.component : null}
               </TabsContent>
             ))}
