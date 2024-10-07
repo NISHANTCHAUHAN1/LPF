@@ -23,6 +23,16 @@ const CourseCurriculum = () => {
     ]);
   };
 
+  // This function updates the title of a specific course in an array of course data based on the user’s input, while maintaining immutability by working on a copy of the array.
+  const handleCourseTitleChange = (event, currentIndex) => {
+    let cpyCourseCurriculumFormData = [...courseCurriculumFormData];
+    cpyCourseCurriculumFormData[currentIndex] = {
+      ...cpyCourseCurriculumFormData[currentIndex],
+      title: event.target.value,
+    };
+    setCourseCurriculumFormData(cpyCourseCurriculumFormData);
+  };
+
   console.log(courseCurriculumFormData);
 
   return (
@@ -42,6 +52,8 @@ const CourseCurriculum = () => {
                   name={`title-${index + 1}`}
                   placeholder="Enter lecture title"
                   className="max-w-96"
+                  onChange={(event) => handleCourseTitleChange(event, index)}
+                  value={courseCurriculumFormData[index]?.title}
                 />
 
                 <div className="flex items-center space-x-2">
