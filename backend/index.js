@@ -25,8 +25,10 @@ app.use(cookieParser()); // npm cookie cookies pass for profile
 
 // import routing
 import authRoute from './routes/authRoute/index.js';
+import mediaRoutes from './routes/instructorRoutes/mediaRoutes.js'
 
 app.use("/auth", authRoute);
+app.use("/media", mediaRoutes);
 
 
 app.use((err, req, res, next) => {
