@@ -11,6 +11,7 @@ const CourseCurriculum = () => {
   const { courseCurriculumFormData, setCourseCurriculumFormData } =
     useContext(InstructorContext);
 
+
   // The function handleNewLecture is used to add a new lecture to the existing curriculum.
   // It keeps the current lectures and adds a new lecture using the default data structure (courseCurriculumInitialFormData[0]).
   // This helps manage the state for a form where users can add multiple lectures dynamically.
@@ -33,15 +34,25 @@ const CourseCurriculum = () => {
     setCourseCurriculumFormData(cpyCourseCurriculumFormData);
   };
 
-
-  const handleFreePreviewChange = (event, currentIndex) => {
+  function handleFreePreviewChange(currentValue, currentIndex) {
     let cpyCourseCurriculumFormData = [...courseCurriculumFormData];
     cpyCourseCurriculumFormData[currentIndex] = {
       ...cpyCourseCurriculumFormData[currentIndex],
-      title: event.target.value,
+      freePreview: currentValue,
     };
+
     setCourseCurriculumFormData(cpyCourseCurriculumFormData);
   }
+
+  const handleSingleLectureUpload = (evnet, currentIndex) => {
+    // console.log(evnet.target.files);
+
+    const selectedFile = event.target.files[0];
+    if (selectedFile) {
+      const videoFormData = new FormData();
+      videoFormData.append("file", selectedFile);
+    }
+  };
 
   // console.log(courseCurriculumFormData);
 
@@ -71,7 +82,7 @@ const CourseCurriculum = () => {
                     onCheckedChange={(value) =>
                       handleFreePreviewChange(value, index)
                     }
-                    checked={true}
+                    checked={courseCurriculumFormData[index]?.freePreview}
                     id={`freePreview-${index + 1}`}
                   />
                   <Label htmlFor={`freePreview-${index + 1}`}>
@@ -81,7 +92,12 @@ const CourseCurriculum = () => {
               </div>
 
               <div className="mt-6">
-                <Input type="file" accept="video/*" className="mb-4" />
+                <Input
+                  type="file"
+                  accept="video/*"
+                  onChange={(event) => handleSingleLectureUpload(event, index)}
+                  className="mb-4"
+                />
               </div>
             </div>
           ))}
