@@ -33,7 +33,17 @@ const CourseCurriculum = () => {
     setCourseCurriculumFormData(cpyCourseCurriculumFormData);
   };
 
-  console.log(courseCurriculumFormData);
+
+  const handleFreePreviewChange = (event, currentIndex) => {
+    let cpyCourseCurriculumFormData = [...courseCurriculumFormData];
+    cpyCourseCurriculumFormData[currentIndex] = {
+      ...cpyCourseCurriculumFormData[currentIndex],
+      title: event.target.value,
+    };
+    setCourseCurriculumFormData(cpyCourseCurriculumFormData);
+  }
+
+  // console.log(courseCurriculumFormData);
 
   return (
     <Card>
@@ -57,7 +67,13 @@ const CourseCurriculum = () => {
                 />
 
                 <div className="flex items-center space-x-2">
-                  <Switch checked={true} id={`freePreview-${index + 1}`} />
+                  <Switch
+                    onCheckedChange={(value) =>
+                      handleFreePreviewChange(value, index)
+                    }
+                    checked={true}
+                    id={`freePreview-${index + 1}`}
+                  />
                   <Label htmlFor={`freePreview-${index + 1}`}>
                     Free Preview
                   </Label>
