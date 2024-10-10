@@ -5,12 +5,16 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructorContext";
+import { mediaUploadService } from "@/services";
 import React, { useContext } from "react";
 
 const CourseCurriculum = () => {
-  const { courseCurriculumFormData, setCourseCurriculumFormData } =
-    useContext(InstructorContext);
-
+  const {
+    courseCurriculumFormData,
+    setCourseCurriculumFormData,
+    mediaUploadProgess,
+    setMediaUploadProgess,
+  } = useContext(InstructorContext);
 
   // The function handleNewLecture is used to add a new lecture to the existing curriculum.
   // It keeps the current lectures and adds a new lecture using the default data structure (courseCurriculumInitialFormData[0]).
@@ -44,17 +48,34 @@ const CourseCurriculum = () => {
     setCourseCurriculumFormData(cpyCourseCurriculumFormData);
   }
 
-  const handleSingleLectureUpload = (evnet, currentIndex) => {
+  async function handleSingleLectureUpload(event, currentIndex) {
     // console.log(evnet.target.files);
-
     const selectedFile = event.target.files[0];
     if (selectedFile) {
       const videoFormData = new FormData();
       videoFormData.append("file", selectedFile);
-    }
-  };
 
-  // console.log(courseCurriculumFormData);
+      try {
+        setMediaUploadProgess(true);
+        const response = await mediaUploadService(videoFormData);
+        // console.log(response);
+        if (response.success) {
+          let cpyCourseCurriculumFormData = [...courseCurriculumFormData];
+          cpyCourseCurriculumFormData[currentIndex] = {
+            ...cpyCourseCurriculumFormData[currentIndex],
+            videoUrl: response?.data?.url,
+            public_id: response?.data?.public_id,
+          };
+          setCourseCurriculumFormData(cpyCourseCurriculumFormData);
+          setMediaUploadProgess(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }
+
+  console.log(courseCurriculumFormData);
 
   return (
     <Card>
@@ -92,6 +113,13 @@ const CourseCurriculum = () => {
               </div>
 
               <div className="mt-6">
+                {/* <Input
+                  type="file"
+                  accept="video/*"
+                  onChange={(event) => handleSingleLectureUpload(event, index)}
+                  className="mb-4"
+                /> */}
+
                 <Input
                   type="file"
                   accept="video/*"
