@@ -1,3 +1,4 @@
+import MediaProgressbar from "@/components/mediaProgressBar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -59,7 +60,10 @@ const CourseCurriculum = () => {
 
       try {
         setMediaUploadProgess(true);
-        const response = await mediaUploadService(videoFormData);
+        const response = await mediaUploadService(
+          videoFormData,
+          setMediaUploadProgressPercentage
+        );
         // console.log(response);
         if (response.success) {
           let cpyCourseCurriculumFormData = [...courseCurriculumFormData];
@@ -87,6 +91,12 @@ const CourseCurriculum = () => {
 
       <CardContent>
         <Button onClick={handleNewLecture}>Add Lecture</Button>
+        {mediaUploadProgess ? (
+          <MediaProgressbar
+            isMediaUploading={mediaUploadProgess}
+            progress={mediaUploadProgressPercentage}
+          />
+        ) : null}
         <div className="mt-4 space-y-4">
           {courseCurriculumFormData.map((curriculumItem, index) => (
             <div className="border p-5 rounded-md" key={index}>
@@ -115,12 +125,6 @@ const CourseCurriculum = () => {
               </div>
 
               <div className="mt-6">
-                {/* <Input
-                  type="file"
-                  accept="video/*"
-                  onChange={(event) => handleSingleLectureUpload(event, index)}
-                  className="mb-4"
-                /> */}
 
                 <Input
                   type="file"
