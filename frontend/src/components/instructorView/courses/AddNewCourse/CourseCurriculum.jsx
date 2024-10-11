@@ -14,6 +14,8 @@ const CourseCurriculum = () => {
     setCourseCurriculumFormData,
     mediaUploadProgess,
     setMediaUploadProgess,
+    mediaUploadProgressPercentage,
+    setMediaUploadProgressPercentage,
   } = useContext(InstructorContext);
 
   // The function handleNewLecture is used to add a new lecture to the existing curriculum.
