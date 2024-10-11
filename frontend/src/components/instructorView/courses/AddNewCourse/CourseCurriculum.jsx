@@ -75,7 +75,7 @@ const CourseCurriculum = () => {
     }
   }
 
-  console.log(courseCurriculumFormData);
+  // console.log(courseCurriculumFormData);
 
   return (
     <Card>
