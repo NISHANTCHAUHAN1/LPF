@@ -1,6 +1,6 @@
 function VideoPlayer() {
     return(
-        <div>VideoPlayer</div>
+        <div>videoPlayer</div>
     )
 }
 
