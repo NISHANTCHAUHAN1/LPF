@@ -128,7 +128,7 @@ const CourseCurriculum = () => {
               <div className="mt-6">
                 {courseCurriculumFormData[index]?.videoUrl ? (
                   <div className="flex gap-3">
-                    <VideoPlayer />
+                    <VideoPlayer url={courseCurriculumFormData[index]?.videoUrl} />
                     <Button>Replace Video</Button>
                     <Button className="bg-red-900">Delete Lecture</Button>
                   </div>
