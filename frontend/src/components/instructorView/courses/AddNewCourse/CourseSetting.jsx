@@ -30,7 +30,6 @@ const CourseSetting = () => {
   }
 
   // console.log(courseLandingFormData);
-  
 
   return (
     <Card>
@@ -39,14 +38,18 @@ const CourseSetting = () => {
       </CardHeader>
 
       <CardContent>
-        <div className="flex flex-col gap-3">
-          <Label>Upload Course Image</Label>
-          <Input
-            onChange={handleImageUploadChange}
-            type="file"
-            accept="image/*"
-          />
-        </div>
+        {courseLandingFormData?.image ? (
+          <img src={courseLandingFormData.image} />
+        ) : (
+          <div className="flex flex-col gap-3">
+            <Label>Upload Course Image</Label>
+            <Input
+              onChange={handleImageUploadChange}
+              type="file"
+              accept="image/*"
+            />
+          </div>
+        )}
       </CardContent>
     </Card>
   );
