@@ -16,7 +16,9 @@ export default function InstructorProvider({ children }) {
     courseCurriculumInitialFormData
   );
 
-  const [mediaUploadProgess,setMediaUploadProgess] = useState(false);
+  // image or video upload .. !
+  const [mediaUploadProgess, setMediaUploadProgess] = useState(false);
+  const [mediaUploadProgressPercentage, setMediaUploadProgressPercentage] = useState(0);
 
   return (
     <InstructorContext.Provider
@@ -26,7 +28,9 @@ export default function InstructorProvider({ children }) {
         courseCurriculumFormData,
         setCourseCurriculumFormData,
         mediaUploadProgess,
-        setMediaUploadProgess
+        setMediaUploadProgess,
+        mediaUploadProgressPercentage,
+        setMediaUploadProgressPercentage,
       }}
     >
       {children}
