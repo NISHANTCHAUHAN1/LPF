@@ -1,8 +1,17 @@
-import { useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import ReactPlayer from "react-player";
 import { Slider } from "../ui/slider";
 import { Button } from "../ui/button";
-import { Pause, Play, RotateCcw, RotateCw, Volume2, VolumeX } from "lucide-react";
+import {
+  Maximize,
+  Minimize,
+  Pause,
+  Play,
+  RotateCcw,
+  RotateCw,
+  Volume2,
+  VolumeX,
+} from "lucide-react";
 
 function VideoPlayer({
   width = "100%",
@@ -27,13 +36,83 @@ function VideoPlayer({
     setPlaying(!playing);
   }
 
-  function handleProgress() {}
+  function handleProgress(state) {
+    if (!seeking) {
+      setPlayedVideo(state.played);
+    }
+  }
 
-  function handleRewind() {}
+  function handleRewind() {
+    playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() - 5);
+  }
 
-  function handleForward() {}
+  function handleForward() {
+    playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() + 5);
+  }
 
-  function handleToggleMute() {}
+  function handleToggleMute() {
+    setMuted(!muted);
+  }
+
+  function handleSeekChange(newValue) {
+    setPlayedVideo(newValue[0]);
+    setSeeking(true);
+  }
+
+  function handleSeekMouseUp() {
+    setSeeking(false);
+    playerRef.current?.seekTo(playedVideo);
+  }
+
+  function handleVolumeChange(newValue) {
+    setVolume(newValue[0]);
+  }
+
+  function pad(string) {
+    return ("0" + string).slice(-2);
+  }
+
+  function formatTime(seconds) {
+    const date = new Date(seconds * 1000);
+    const hh = date.getUTCHours();
+    const mm = date.getUTCMinutes();
+    const ss = pad(date.getUTCSeconds());
+
+    if (hh) {
+      return `${hh}:${pad(mm)}:${ss}`;
+    }
+    return `${mm}:${ss}`;
+  }
+
+  const handleFullScreen = useCallback(() => {
+    if (!isFullScreen) {
+      if (playerContainerRef?.current.requestFullscreen) {
+        playerContainerRef?.current?.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }, [isFullScreen]);
+
+  function handleMouseMove() {
+    setShowControls(true);
+    clearTimeout(controlsTimeoutRef.current);
+    controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 2000);
+  }
+
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      setIsFullScreen(document.fullscreenElement);
+    };
+
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
+
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+    };
+  }, []);
 
   return (
     <div
@@ -42,6 +121,8 @@ function VideoPlayer({
         ${isFullScreen ? "w-screen h-screen" : ""}
         `}
       style={{ width, height }}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={() => setShowControls(false)}
     >
       <ReactPlayer
         ref={playerRef}
@@ -53,6 +134,7 @@ function VideoPlayer({
         volume={volume}
         muted={muted}
         onProgress={handleProgress}
+        // controls
       />
       {showControls && (
         <div
@@ -64,8 +146,8 @@ function VideoPlayer({
             value={[playedVideo * 100]}
             max={100}
             step={0.1}
-            // onValueChange={}
-            // onValueCommit={handleSeekMouseUp}
+            onValueChange={(value) => handleSeekChange([value[0] / 100])}
+            onValueCommit={handleSeekMouseUp}
             className="w-full mb-4"
           />
 
@@ -75,7 +157,7 @@ function VideoPlayer({
                 variant="ghost"
                 size="icon"
                 onClick={handlePlayAndPause}
-                className="text-white hover:text-primary hover:bg-gray-700"
+                className="text-white hover:text-white hover:bg-gray-700"
               >
                 {playing ? (
                   <Pause className="h-6 w-6" />
@@ -85,7 +167,7 @@ function VideoPlayer({
               </Button>
 
               <Button
-               onClick={handleRewind}
+                onClick={handleRewind}
                 variant="ghost"
                 size="icon"
                 className="text-white bg-transparent hover:text-white hover:bg-gray-700"
@@ -94,7 +176,7 @@ function VideoPlayer({
               </Button>
 
               <Button
-               onClick={handleForward}
+                onClick={handleForward}
                 variant="ghost"
                 size="icon"
                 className="text-white bg-transparent hover:text-white hover:bg-gray-700"
@@ -103,14 +185,44 @@ function VideoPlayer({
               </Button>
 
               <Button
-               onClick={handleToggleMute}
+                onClick={handleToggleMute}
                 variant="ghost"
                 size="icon"
                 className="text-white bg-transparent hover:text-white hover:bg-gray-700"
               >
-                {
-                    muted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />
-                }
+                {muted ? (
+                  <VolumeX className="h-6 w-6" />
+                ) : (
+                  <Volume2 className="h-6 w-6" />
+                )}
+              </Button>
+
+              <Slider
+                value={[volume * 100]}
+                max={100}
+                step={1}
+                onValueChange={(value) => handleVolumeChange([value[0] / 100])}
+                className="w-24 "
+              />
+            </div>
+            <div className="flex items-center space-x-2">
+              <div className="text-white">
+                {formatTime(
+                  playedVideo * (playerRef?.current?.getDuration() || 0)
+                )}
+                / {formatTime(playerRef?.current?.getDuration() || 0)}
+              </div>
+              <Button
+                className="text-white bg-transparent hover:text-white hover:bg-gray-700"
+                variant="ghost"
+                size="icon"
+                onClick={handleFullScreen}
+              >
+                {isFullScreen ? (
+                  <Minimize className="h-6 w-6" />
+                ) : (
+                  <Maximize className="h-6 w-6" />
+                )}
               </Button>
             </div>
           </div>
