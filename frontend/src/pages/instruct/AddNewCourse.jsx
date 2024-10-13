@@ -4,12 +4,23 @@ import CourseSetting from "@/components/instructorView/courses/AddNewCourse/Cour
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { courseCurriculumInitialFormData, courseLandingInitialFormData } from "@/config";
+import { AuthContext } from "@/context/authContext";
 import { InstructorContext } from "@/context/instructorContext";
+import { addNewCourseService } from "@/services";
 import React, { useContext } from "react";
+import { useNavigate } from "react-router-dom";
 
 const AddNewCourse = () => {
-  const { courseLandingFormData, courseCurriculumFormData } =
-    useContext(InstructorContext);
+  const {
+    courseLandingFormData,
+    courseCurriculumFormData,
+    setCourseCurriculumFormData,
+    setCourseLandingFormData,
+  } = useContext(InstructorContext);
+
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   function isEmpty(value) {
     // The function first checks if the value is an array using the built-in method Array.isArray()
@@ -35,11 +46,30 @@ const AddNewCourse = () => {
       ) {
         return false;
       }
-      if(item.freePreview) {
-        hasFreePreview = true  // found at least one free preview
+      if (item.freePreview) {
+        hasFreePreview = true; // found at least one free preview
       }
     }
-    return hasFreePreview
+    return hasFreePreview;
+  }
+
+  async function handleCreateCourse() {
+    const courseFinalFormData = {
+      instructorId: auth?.user?._id,
+      instructorName: auth?.user?.userName,
+      data: new Date(),
+      ...courseLandingFormData,
+      students: [],
+      curriculum: courseCurriculumFormData,
+      isPublised: true,
+    };
+    const response = await addNewCourseService(courseFinalFormData);
+    if (response?.success) {
+      setCourseLandingFormData(courseLandingInitialFormData);
+      setCourseCurriculumFormData(courseCurriculumInitialFormData);
+      navigate(-1);
+    }
+    console.log(courseFinalFormData, "courseFinalFormData");
   }
 
   return (
@@ -48,6 +78,7 @@ const AddNewCourse = () => {
         <h1 className="text-3xl font-extrabold mb-5">Create new course</h1>
         <Button
           disabled={!validateFormData()}
+          onClick={handleCreateCourse}
           className="text-sm tracking-wider font-bold px-8"
         >
           Submit

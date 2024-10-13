@@ -5,9 +5,11 @@ import { Button } from "@/components/ui/button";
 import { BarChart, Book, LogOut } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
 import { AuthContext } from "@/context/authContext";
+import { InstructorContext } from "@/context/instructorContext";
 
 const InstructorDashBoard = () => {
   const { resetCredentials } = useContext(AuthContext);
+  const {instructorCoursesList, setInstructorCoursesList} = useContext(InstructorContext);
   const [activeTab, setActiveTab] = useState("dashboard");
   const menuItems = [
     {
@@ -64,7 +66,7 @@ const InstructorDashBoard = () => {
         <div className="max-w-7xl mx-auto">
           <h1 className="text-3xl  font-bold mb-8">Dashboard</h1>
 
-          {/* menuItem null nahi hoga tha content show hoga like dashboard or courses or nuull hoga toh kuch nhi like logout */}
+          {/* menuItem null nahi hoga tha content show hoga like dashboard or courses or null hoga toh kuch nhi like logout */}
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             {menuItems.map((menuItem) => (
               <TabsContent value={menuItem.value} key={menuItem.value}>
