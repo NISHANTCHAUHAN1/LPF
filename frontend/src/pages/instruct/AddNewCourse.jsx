@@ -4,11 +4,17 @@ import CourseSetting from "@/components/instructorView/courses/AddNewCourse/Cour
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { courseCurriculumInitialFormData, courseLandingInitialFormData } from "@/config";
+import {
+  courseCurriculumInitialFormData,
+  courseLandingInitialFormData,
+} from "@/config";
 import { AuthContext } from "@/context/authContext";
 import { InstructorContext } from "@/context/instructorContext";
-import { addNewCourseService } from "@/services";
-import React, { useContext } from "react";
+import {
+  addNewCourseService,
+  fetchInstructorCourseDetailsService,
+} from "@/services";
+import React, { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 const AddNewCourse = () => {
@@ -18,15 +24,14 @@ const AddNewCourse = () => {
     setCourseCurriculumFormData,
     setCourseLandingFormData,
     currentEditedCourseId,
-    setCurrentEditedCourseId
+    setCurrentEditedCourseId,
   } = useContext(InstructorContext);
 
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const params = useParams();
-  console.log(params);
-  
+  // console.log(params);
 
   function isEmpty(value) {
     // The function first checks if the value is an array using the built-in method Array.isArray()
@@ -77,6 +82,36 @@ const AddNewCourse = () => {
     }
     console.log(courseFinalFormData, "courseFinalFormData");
   }
+
+  async function fetchCurrentCourseDetails() {
+    const response = await fetchInstructorCourseDetailsService(
+      currentEditedCourseId
+    );
+
+    if (response?.success) {
+      const setCourseFormData = Object.keys(
+        courseLandingInitialFormData
+      ).reduce((acc, key) => {
+        acc[key] = response?.data[key] || courseLandingFormData[key];
+        return acc;
+      }, {});
+      console.log(setCourseFormData, response?.data, "setCourseFormData");
+      setCourseLandingFormData(setCourseFormData);
+      setCourseCurriculumFormData(response?.data?.curriculum);
+    }
+
+    // console.log(response, "response");
+  }
+
+  useEffect(() => {
+    if (currentEditedCourseId !== null) fetchCurrentCourseDetails();
+  }, [currentEditedCourseId]);
+
+  useEffect(() => {
+    if (params) setCurrentEditedCourseId(params?.courseId);
+  }, [params]);
+
+  // console.log(params, currentEditedCourseId, "params");
 
   return (
     <div className="container mx-auto p-4">
