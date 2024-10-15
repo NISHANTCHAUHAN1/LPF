@@ -9,7 +9,7 @@ import { AuthContext } from "@/context/authContext";
 import { InstructorContext } from "@/context/instructorContext";
 import { addNewCourseService } from "@/services";
 import React, { useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const AddNewCourse = () => {
   const {
@@ -17,10 +17,16 @@ const AddNewCourse = () => {
     courseCurriculumFormData,
     setCourseCurriculumFormData,
     setCourseLandingFormData,
+    currentEditedCourseId,
+    setCurrentEditedCourseId
   } = useContext(InstructorContext);
 
   const { auth } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  const params = useParams();
+  console.log(params);
+  
 
   function isEmpty(value) {
     // The function first checks if the value is an array using the built-in method Array.isArray()

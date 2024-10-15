@@ -48,6 +48,17 @@ const App = () => {
       />
 
       <Route
+        path="/instructor/edit-course/:courseId"
+        element={
+          <RouteProtected
+            element={<AddNewCourse />}
+            authenticate={auth?.authenticate}
+            user={auth?.user}
+          />
+        }
+      />
+
+      <Route
         path="/"
         element={
           <RouteProtected
