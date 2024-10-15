@@ -9,11 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { InstructorContext } from "@/context/instructorContext";
 import { Delete, Edit } from "lucide-react";
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 const InstructorCourses = ({ listOfCourse }) => {
+  const [currentEditedCourseId, setCurrentEditedCourseId] = useContext(InstructorContext);
   const navigate = useNavigate();
   return (
     <Card>
