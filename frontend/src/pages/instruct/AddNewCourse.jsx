@@ -13,6 +13,7 @@ import { InstructorContext } from "@/context/instructorContext";
 import {
   addNewCourseService,
   fetchInstructorCourseDetailsService,
+  updateCourseByIdService,
 } from "@/services";
 import React, { useContext, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -74,11 +75,20 @@ const AddNewCourse = () => {
       curriculum: courseCurriculumFormData,
       isPublised: true,
     };
-    const response = await addNewCourseService(courseFinalFormData);
+
+    const response =
+      currentEditedCourseId !== null
+        ? await updateCourseByIdService(
+            currentEditedCourseId,
+            courseFinalFormData
+          )
+        : await addNewCourseService(courseFinalFormData);
+
     if (response?.success) {
       setCourseLandingFormData(courseLandingInitialFormData);
       setCourseCurriculumFormData(courseCurriculumInitialFormData);
       navigate(-1);
+      setCurrentEditedCourseId(null);
     }
     console.log(courseFinalFormData, "courseFinalFormData");
   }
@@ -111,7 +121,7 @@ const AddNewCourse = () => {
     if (params?.courseId) setCurrentEditedCourseId(params?.courseId);
   }, [params?.courseId]);
 
-  console.log(params, currentEditedCourseId, "params");
+  // console.log(params, currentEditedCourseId, "params");
 
   return (
     <div className="container mx-auto p-4">
