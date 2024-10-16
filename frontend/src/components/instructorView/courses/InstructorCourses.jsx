@@ -3,23 +3,36 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { courseCurriculumInitialFormData, courseLandingInitialFormData } from "@/config";
+import { InstructorContext } from "@/context/instructorContext";
 import { Delete, Edit } from "lucide-react";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 
 const InstructorCourses = ({ listOfCourse }) => {
   const navigate = useNavigate();
+  const {
+    setCourseCurriculumFormData,
+    setCourseLandingFormData,
+    setCurrentEditedCourseId,
+  } = useContext(InstructorContext);
   return (
     <Card>
       <CardHeader className="flex justify-between flex-row items-center">
         <CardTitle className="text-3xl font-extrabold">All Courses</CardTitle>
+
         <Button
-          onClick={() => navigate("/instructor/create-new-course")}
+          onClick={() => {
+            setCurrentEditedCourseId(null);
+            setCourseLandingFormData(courseLandingInitialFormData);
+            setCourseCurriculumFormData(courseCurriculumInitialFormData);
+            navigate("/instructor/create-new-course");
+          }}
           className="p-6"
         >
           Create New Course
@@ -29,7 +42,6 @@ const InstructorCourses = ({ listOfCourse }) => {
       <CardContent>
         <div className="overflow-x-auto">
           <Table>
-            <TableCaption>A list of your recent Courses.</TableCaption>
             <TableHeader>
               <TableRow>
                 <TableHead>Course</TableHead>

@@ -40,7 +40,7 @@ export default function InstructorProvider({ children }) {
         instructorCoursesList,
         setInstructorCoursesList,
         currentEditedCourseId,
-        setCurrentEditedCourseId
+        setCurrentEditedCourseId,
       }}
     >
       {children}
