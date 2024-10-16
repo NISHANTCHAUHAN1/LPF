@@ -8,7 +8,8 @@ import VideoPlayer from "@/components/videoPlayer/indedx";
 import { courseCurriculumInitialFormData } from "@/config";
 import { InstructorContext } from "@/context/instructorContext";
 import { mediaDeleteService, mediaUploadService } from "@/services";
-import React, { useContext } from "react";
+import { Upload } from "lucide-react";
+import React, { useContext, useRef } from "react";
 
 const CourseCurriculum = () => {
   const {
@@ -19,6 +20,8 @@ const CourseCurriculum = () => {
     mediaUploadProgressPercentage,
     setMediaUploadProgressPercentage,
   } = useContext(InstructorContext);
+
+   const bulkUploadInputRef = useRef(null);
 
   // The function handleNewLecture is used to add a new lecture to the existing curriculum.
   // It keeps the current lectures and adds a new lecture using the default data structure (courseCurriculumInitialFormData[0]).
@@ -84,19 +87,21 @@ const CourseCurriculum = () => {
 
   async function handleReplaceVideo(currentIndex) {
     let cpyCourseCurriculumFormData = [...courseCurriculumFormData];
-    const getCurrentVideoPublicId = cpyCourseCurriculumFormData[currentIndex].public_id;
+    const getCurrentVideoPublicId =
+      cpyCourseCurriculumFormData[currentIndex].public_id;
 
-    const deleteCurrentMediaResponse = await mediaDeleteService(getCurrentVideoPublicId);
+    const deleteCurrentMediaResponse = await mediaDeleteService(
+      getCurrentVideoPublicId
+    );
     // console.log(deleteCurrentMediaResponse);
-    if(deleteCurrentMediaResponse?.success) {
+    if (deleteCurrentMediaResponse?.success) {
       cpyCourseCurriculumFormData[currentIndex] = {
         ...cpyCourseCurriculumFormData[currentIndex],
         videoUrl: "",
         public_id: "",
-      }
+      };
       setCourseCurriculumFormData(cpyCourseCurriculumFormData);
     }
-    
   }
 
   function isCourseCurriculumFormDataValid() {
@@ -110,16 +115,48 @@ const CourseCurriculum = () => {
     });
   }
 
+  function handleOpenBulkUploadDialog() {
+    bulkUploadInputRef.current?.click();
+  }
+
+  async function handleMediaBulkUpload(event) {}
+
   // console.log(courseCurriculumFormData);
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="flex flex-row justify-between">
         <CardTitle>Create Course Curriculum</CardTitle>
+        <div>
+        <Input
+            type="file"
+            ref={bulkUploadInputRef}
+            accept="video/*"
+            multiple
+            className="hidden"
+            id="bulk-media-upload"
+            onChange={handleMediaBulkUpload}
+          />
+          <Button
+            as="label"
+            htmlFor="bulk-media-upload"
+            variant="outline"
+            className="cursor-pointer"
+            onClick={handleOpenBulkUploadDialog}
+          >
+            <Upload className="w-4 h-5 mr-2" />
+            Bulk Upload
+          </Button>
+        </div>
       </CardHeader>
 
       <CardContent>
-        <Button disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgess} onClick={handleNewLecture}>Add Lecture</Button>
+        <Button
+          disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgess}
+          onClick={handleNewLecture}
+        >
+          Add Lecture
+        </Button>
         {mediaUploadProgess ? (
           <MediaProgressbar
             isMediaUploading={mediaUploadProgess}
@@ -156,8 +193,14 @@ const CourseCurriculum = () => {
               <div className="mt-6">
                 {courseCurriculumFormData[index]?.videoUrl ? (
                   <div className="flex gap-3">
-                    <VideoPlayer url={courseCurriculumFormData[index]?.videoUrl} width="450px" height="200px" />
-                    <Button onClick={() => handleReplaceVideo(index)}>Replace Video</Button>
+                    <VideoPlayer
+                      url={courseCurriculumFormData[index]?.videoUrl}
+                      width="450px"
+                      height="200px"
+                    />
+                    <Button onClick={() => handleReplaceVideo(index)}>
+                      Replace Video
+                    </Button>
                     <Button className="bg-red-900">Delete Lecture</Button>
                   </div>
                 ) : (
