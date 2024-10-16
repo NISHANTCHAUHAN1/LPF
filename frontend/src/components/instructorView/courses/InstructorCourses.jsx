@@ -21,6 +21,7 @@ const InstructorCourses = ({ listOfCourse }) => {
     setCourseLandingFormData,
     setCurrentEditedCourseId,
   } = useContext(InstructorContext);
+  
   return (
     <Card>
       <CardHeader className="flex justify-between flex-row items-center">

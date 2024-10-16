@@ -108,10 +108,10 @@ const AddNewCourse = () => {
   }, [currentEditedCourseId]);
 
   useEffect(() => {
-    if (params) setCurrentEditedCourseId(params?.courseId);
-  }, [params]);
+    if (params?.courseId) setCurrentEditedCourseId(params?.courseId);
+  }, [params?.courseId]);
 
-  // console.log(params, currentEditedCourseId, "params");
+  console.log(params, currentEditedCourseId, "params");
 
   return (
     <div className="container mx-auto p-4">
