@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
   DropdownMenu,
@@ -16,9 +16,58 @@ import { ArrowDownUpIcon } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 
 const StudentCourseView = () => {
-  const [sort, setSort] = useState("");
+  const [sort, setSort] = useState("price-lowtohigh");
+  const [filters, setFilters] = useState({});
+
   const { studentViewCoursesList, setStudentViewCoursesList } =
     useContext(StudentContext);
+  // console.log(studentViewCoursesList);
+
+  //   function handleFilterOnChange(getSectionId, getCurrentOption) {
+  //     let cpyFilters = { ...filters };
+  //     const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
+  //     console.log(indexOfCurrentSection, getSectionId);
+  //     if (indexOfCurrentSection === -1) {
+  //       cpyFilters = {
+  //         ...cpyFilters,
+  //         [getSectionId]: [getCurrentOption.id],
+  //       };
+  //       console.log(cpyFilters);
+  //     } else {
+  //       const indexOfCurrentOption = cpyFilters[getSectionId].indexOf(
+  //         getCurrentOption.id
+  //       );
+  //       if (indexOfCurrentOption === -1)
+  //         cpyFilters[getSectionId].push(getCurrentOption.id);
+  //       else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
+  //     }
+  //     setFilters(cpyFilters);
+  //     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
+  //   }
+
+  function handleFilterOnChange(sectionId, option) {
+    // Create a copy of the filters object to avoid mutations
+    let updatedFilters = { ...filters };
+
+    // If the section does not exist, create it with the selected option
+    if (!updatedFilters[sectionId]) {
+      updatedFilters[sectionId] = [option.id];
+    } else {
+      // If the section exists, find the index of the option
+      const optionIndex = updatedFilters[sectionId].indexOf(option.id);
+
+      // Add the option if it's not present, or remove it if it is
+      if (optionIndex === -1) {
+        updatedFilters[sectionId].push(option.id);
+      } else {
+        updatedFilters[sectionId].splice(optionIndex, 1);
+      }
+    }
+
+    // Update the state and store the filters in sessionStorage
+    setFilters(updatedFilters);
+    sessionStorage.setItem("filters", JSON.stringify(updatedFilters));
+  }
 
   async function fetchAllStudentViewCourseList() {
     const response = await fetchStudentViewCourseListService();
@@ -29,6 +78,8 @@ const StudentCourseView = () => {
     fetchAllStudentViewCourseList();
   }, []);
 
+  console.log(filters);
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl font-bold mb-4">All Courses</h1>
@@ -36,17 +87,34 @@ const StudentCourseView = () => {
         <aside className="w-full md:w-64 space-y-4">
           <div>
             {Object.keys(filterOptions).map((ketItem) => (
-              <div className="p-4 border-b">
+              <div className="p-4 border-b" key={ketItem}>
                 <h3 className="font-bold mb-3">{ketItem.toUpperCase()}</h3>
                 <div className="grid gap-2 mt-2">
-                  {filterOptions[ketItem].map((option) => (
-                    <Label className="flex font-medium items-center gap-3">
-                      <Checkbox
-                        checked={false}
+                  {filterOptions[ketItem].map((option, index) => (
+                    <Label
+                      className="flex font-medium items-center gap-3"
+                      key={`${ketItem}-${option.id || index}`}
+                    >
+                      {/* <Checkbox
+                        checked={
+                            filters &&
+                            Object.keys(filters).length > 0 &&
+                            filters[ketItem] &&
+                            filters[ketItem].indexOf(option.id) > -1
+                          }
                         onCheckedChange={() =>
-                          handleFilterOnChange(ketItem, option.id)
+                          handleFilterOnChange(ketItem, option)
+                        }
+                      /> */}
+                      <Checkbox
+                        checked={
+                          filters?.[ketItem]?.includes(option.id) || false
+                        }
+                        onCheckedChange={() =>
+                          handleFilterOnChange(ketItem, option)
                         }
                       />
+
                       {option.label}
                     </Label>
                   ))}
@@ -98,6 +166,27 @@ const StudentCourseView = () => {
                         src={courseItem?.image}
                         className="w-ful h-full object-cover"
                       />
+                    </div>
+                    <div className="flex-1">
+                      <CardTitle className="text-xl mb-2">
+                        {courseItem?.title}
+                      </CardTitle>
+                      <p className="text-sm text-gray-600 mb-1">
+                        Created By{" "}
+                        <span className="font-bold">
+                          {courseItem?.instructorName}
+                        </span>
+                      </p>
+                      <p className="text-[16px] text-gray-600 mt-3 mb-2">
+                        {`${courseItem?.curriculum?.length} ${
+                          courseItem?.curriculum?.length <= 1
+                            ? "Lecture"
+                            : "Lectures"
+                        } - ${courseItem?.level.toUpperCase()} Level`}
+                      </p>
+                      <p className="font-bold text-lg">
+                        ${courseItem?.pricing}
+                      </p>
                     </div>
                   </CardContent>
                 </Card>
