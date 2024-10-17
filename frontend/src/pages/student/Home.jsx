@@ -1,11 +1,22 @@
 import { courseCategories } from "@/config";
 import banner from "../../../public/banner-img.png";
 import { Button } from "@/components/ui/button";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { StudentContext } from "@/context/studentContext";
+import { fetchStudentViewCourseListService } from "@/services";
 
 const Home = () => {
-  const {studentCourseList, setStudentCourseList} = useContext(StudentContext);
+  const {studentCourseList, setStudentCourseList} = useContext(StudentContext)
+
+  async function fetchAllStudentViewCourseList() {
+    const response = await fetchStudentViewCourseListService();
+    console.log(response);
+  }
+
+  useEffect(()=> {
+    fetchAllStudentViewCourseList();
+  },[])
+
   return (
     <div className="min-h-screen bg-white">
       <section className="flex flex-col lg:flex-row items-center justify-between py-8 px-4 lg:px-8">
