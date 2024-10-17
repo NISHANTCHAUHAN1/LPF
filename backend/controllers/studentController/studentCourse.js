@@ -1,0 +1,45 @@
+import { Course } from "../../models/Course";
+
+export const getAllstudentCourses = async (req, res) => {
+  try {
+    const coursesList = await Course.find({});
+
+    if (coursesList.length === 0) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No Course Found", data: [] });
+    }
+    res.status(200).json({
+      success: true,
+      data: coursesList,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
+
+export const getStudentViewCourseDetails = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const courseDetails = await Course.findById(id);
+
+    if (!courseDetails) {
+      res.status(400).json({
+        success: false,
+        message: "No course details found",
+        data: null,
+      });
+    }
+    res.status(200).json({ success: true, data: courseDetails });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
