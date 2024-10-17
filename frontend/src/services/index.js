@@ -68,3 +68,13 @@ export async function mediaBulkUploadService(formData,onProgressCallback) {
   });
   return data;
 }
+
+export async function fetchInstructorCourseListService(query) {
+  const { data } = await axiosInstance.get(`/student/course/get?${query}`);
+  return data;
+}
+
+export async function fetchInstructorCourseDetailsService(courseId) {
+  const { data } = await axiosInstance.get(`/student/course/get/details/${courseId}`);
+  return data;
+}
