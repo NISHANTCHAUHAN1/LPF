@@ -1,6 +1,6 @@
 import { Course } from "../../models/Course";
 
-export const getAllstudentCourses = async (req, res) => {
+export const getAllStudentViewCourses = async (req, res) => {
   try {
     const coursesList = await Course.find({});
 
