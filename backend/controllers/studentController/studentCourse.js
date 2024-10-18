@@ -12,15 +12,15 @@ export const getAllStudentViewCourses = async (req, res) => {
     let filters = {};
     // Check and apply category filter
     if (category.length) {
-      filters.category = { $in: category.split(',') };
+      filters.category = { $in: category.split(",") };
     }
     // Check and apply level filter
     if (level.length) {
-      filters.level = { $in: level.split(',') };
+      filters.level = { $in: level.split(",") };
     }
     // Check and apply primaryLanguage filter
     if (primaryLanguage.length) {
-      filters.primaryLanguage = { $in: primaryLanguage.split(',') };
+      filters.primaryLanguage = { $in: primaryLanguage.split(",") };
     }
 
     // Define sorting parameters based on sortBy query
@@ -66,7 +66,7 @@ export const getStudentViewCourseDetails = async (req, res) => {
     const courseDetails = await Course.findById(id);
 
     if (!courseDetails) {
-      res.status(400).json({
+      return res.status(400).json({
         success: false,
         message: "No course details found",
         data: null,
@@ -81,3 +81,4 @@ export const getStudentViewCourseDetails = async (req, res) => {
     });
   }
 };
+
