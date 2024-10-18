@@ -199,7 +199,7 @@ const StudentCourseDetails = () => {
       >
         <DialogContent className="w-[800px]">
           <DialogHeader>
-            <DialogTitle>Course Preview</DialogTitle>
+            <DialogTitle>Course Free Preview</DialogTitle>
           </DialogHeader>
           <div className="aspect-video rounded-lg flex items-center justify-center">
             <VideoPlayer
@@ -207,6 +207,18 @@ const StudentCourseDetails = () => {
               width="450px"
               height="200px"
             />
+          </div>
+          <div className="flex flex-col gap-2">
+            {studentViewCourseDetails?.curriculum
+              ?.filter((item) => item.freePreview)
+              .map((filterItem) => (
+                <p
+                  onClick={() => handleSetFreePreview(filterItem)}
+                  className="cursor-pointer text-[16px] font-medium"
+                >
+                  Demo {filterItem?.title}
+                </p>
+              ))}
           </div>
           <DialogFooter className="sm:justify-start">
             <DialogClose asChild>
