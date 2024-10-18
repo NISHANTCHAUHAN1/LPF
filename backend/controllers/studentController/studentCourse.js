@@ -46,11 +46,6 @@ export const getAllStudentViewCourses = async (req, res) => {
     // Fetch courses with applied filters and sorting
     const coursesList = await Course.find(filters).sort(sortParam);
 
-    // Check if no courses are found
-    if (coursesList.length === 0) {
-      return res.status(400).json({ success: false, message: "No Course Found", data: [] });
-    }
-
     // Return the courses found
     res.status(200).json({
       success: true,

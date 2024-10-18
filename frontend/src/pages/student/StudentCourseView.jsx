@@ -82,8 +82,12 @@ const StudentCourseView = () => {
     sessionStorage.setItem("filters", JSON.stringify(updatedFilters));
   }
 
-  async function fetchAllStudentViewCourseList() {
-    const response = await fetchStudentViewCourseListService();
+  async function  fetchAllStudentViewCourses(filters, sort) {
+    const query = new URLSearchParams({
+      ...filters,
+      sortBy: sort,
+    });
+    const response = await fetchStudentViewCourseListService(query);
     if (response?.success) setStudentViewCoursesList(response?.data);
   }
 
@@ -93,8 +97,21 @@ const StudentCourseView = () => {
   }, [filters]);
 
   useEffect(() => {
-    fetchAllStudentViewCourseList();
+    setSort("price-lowtohigh");
+    setFilters(JSON.parse(sessionStorage.getItem("filters")) || {});
   }, []);
+
+  useEffect(() => {
+    if(filters !== null && sort !== null)
+      fetchAllStudentViewCourses(filters, sort);
+}, [filters, sort]);
+
+useEffect(() => {
+  return () => {
+    sessionStorage.removeItem("filters");
+  };
+}, []);
+
 
   console.log(filters);
 
