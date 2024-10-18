@@ -2,7 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StudentContext } from "@/context/studentContext";
 import { fetchStudentViewCourseDetailsService } from "@/services";
-import { CheckCircle, Globe } from "lucide-react";
+import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -89,6 +89,44 @@ const StudentCourseDetails = () => {
                     </li>
                   ))}
               </ul>
+            </CardContent>
+          </Card>
+
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Course Description</CardTitle>
+            </CardHeader>
+            <CardContent>{studentViewCourseDetails?.description}</CardContent>
+          </Card>
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>Course Curriculum</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {studentViewCourseDetails?.curriculum?.map(
+                (curriculumItem, index) => (
+                  <li
+                    key={index}
+                    className={`${
+                      curriculumItem?.freePreview
+                        ? "cursor-pointer"
+                        : "cursor-not-allowed"
+                    } flex items-center mb-4`}
+                    onClick={
+                      curriculumItem?.freePreview
+                        ? () => handleSetFreePreview(curriculumItem)
+                        : null
+                    }
+                  >
+                    {curriculumItem?.freePreview ? (
+                      <PlayCircle className="mr-2 h-4 w-4" />
+                    ) : (
+                      <Lock className="mr-2 h-4 w-4" />
+                    )}
+                    <span>{curriculumItem?.title}</span>
+                  </li>
+                )
+              )}
             </CardContent>
           </Card>
         </main>
