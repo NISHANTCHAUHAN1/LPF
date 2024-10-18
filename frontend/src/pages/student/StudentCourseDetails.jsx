@@ -1,9 +1,19 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import VideoPlayer from "@/components/videoPlayer/indedx";
 import { StudentContext } from "@/context/studentContext";
 import { fetchStudentViewCourseDetailsService } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
 const StudentCourseDetails = () => {
@@ -17,6 +27,10 @@ const StudentCourseDetails = () => {
   } = useContext(StudentContext);
 
   console.log(studentViewCourseDetails);
+
+  const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] =
+    useState(null);
+  const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
 
   const { id } = useParams();
 
@@ -34,6 +48,15 @@ const StudentCourseDetails = () => {
     }
   }
 
+  function handleSetFreePreview(getCurrentVideoInfo) {
+    // console.log(getCurrentVideoInfo);
+    setDisplayCurrentVideoFreePreview(getCurrentVideoInfo?.videoUrl);
+  }
+
+  useEffect(() => {
+    if (displayCurrentVideoFreePreview !== null) setShowFreePreviewDialog(true);
+  }, [displayCurrentVideoFreePreview]);
+
   useEffect(() => {
     if (currentCourseDetailsId !== null) {
       fetchStudentViewCourseDetails(currentCourseDetailsId);
@@ -47,6 +70,15 @@ const StudentCourseDetails = () => {
   }, [id]);
 
   if (loading) return <Skeleton />;
+
+  const getIndexOfFreePreviewUrl =
+    studentViewCourseDetails !== null
+      ? studentViewCourseDetails?.curriculum?.findIndex(
+          (item) => item.freePreview
+        )
+      : -1;
+
+  // console.log(getIndexOfFreePreviewUrl, studentViewCourseDetails?.curriculum[getIndexOfFreePreviewUrl]);
 
   return (
     <div className=" mx-auto p-4">
@@ -130,7 +162,61 @@ const StudentCourseDetails = () => {
             </CardContent>
           </Card>
         </main>
+
+        <aside className="w-full md:w-[500px]">
+          <Card className="sticky top-4">
+            <CardContent className="p-6">
+              <div className="aspect-video mb-4 rounded-lg flex items-center justify-center">
+                <VideoPlayer
+                  url={
+                    getIndexOfFreePreviewUrl !== -1
+                      ? studentViewCourseDetails?.curriculum[
+                          getIndexOfFreePreviewUrl
+                        ].videoUrl
+                      : ""
+                  }
+                  width="450px"
+                  height="200px"
+                />
+              </div>
+              <div className="mb-4">
+                <span className="text-3xl font-bold">
+                  ${studentViewCourseDetails?.pricing}
+                </span>
+              </div>
+              <Button className="w-full">Buy Now 💰</Button>
+            </CardContent>
+          </Card>
+        </aside>
       </div>
+
+      <Dialog
+        open={showFreePreviewDialog}
+        onOpenChange={() => {
+          setShowFreePreviewDialog(false);
+          setDisplayCurrentVideoFreePreview(null);
+        }}
+      >
+        <DialogContent className="w-[800px]">
+          <DialogHeader>
+            <DialogTitle>Course Preview</DialogTitle>
+          </DialogHeader>
+          <div className="aspect-video rounded-lg flex items-center justify-center">
+            <VideoPlayer
+              url={displayCurrentVideoFreePreview}
+              width="450px"
+              height="200px"
+            />
+          </div>
+          <DialogFooter className="sm:justify-start">
+            <DialogClose asChild>
+              <Button type="button" variant="secondary">
+                Close
+              </Button>
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
