@@ -28,15 +28,19 @@ const StudentCourseView = () => {
     for (const [key, value] of Object.entries(filterParams)) {
       if (Array.isArray(value) && value.length > 0) {
         const paramValue = value.join(",");
-  
+
         queryParams.push(`${key}=${encodeURIComponent(paramValue)}`);
       }
     }
     return queryParams.join("&");
   }
 
-  const { studentViewCoursesList, setStudentViewCoursesList, loading, setLoading } =
-    useContext(StudentContext);
+  const {
+    studentViewCoursesList,
+    setStudentViewCoursesList,
+    loading,
+    setLoading,
+  } = useContext(StudentContext);
 
   //   function handleFilterOnChange(getSectionId, getCurrentOption) {
   //     let cpyFilters = { ...filters };
@@ -84,7 +88,7 @@ const StudentCourseView = () => {
     sessionStorage.setItem("filters", JSON.stringify(updatedFilters));
   }
 
-  async function  fetchAllStudentViewCourses(filters, sort) {
+  async function fetchAllStudentViewCourses(filters, sort) {
     const query = new URLSearchParams({
       ...filters,
       sortBy: sort,
@@ -94,7 +98,6 @@ const StudentCourseView = () => {
       setStudentViewCoursesList(response?.data);
       setLoading(false);
     }
-    
   }
 
   useEffect(() => {
@@ -108,16 +111,15 @@ const StudentCourseView = () => {
   }, []);
 
   useEffect(() => {
-    if(filters !== null && sort !== null)
+    if (filters !== null && sort !== null)
       fetchAllStudentViewCourses(filters, sort);
-}, [filters, sort]);
+  }, [filters, sort]);
 
-useEffect(() => {
-  return () => {
-    sessionStorage.removeItem("filters");
-  };
-}, []);
-
+  useEffect(() => {
+    return () => {
+      sessionStorage.removeItem("filters");
+    };
+  }, []);
 
   console.log(filters);
 
@@ -194,15 +196,20 @@ useEffect(() => {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <span className="text-sm text-black font-bold"> {studentViewCoursesList.length}</span>
+            <span className="text-sm text-black font-bold">
+              {" "}
+              {studentViewCoursesList.length}
+            </span>
           </div>
 
           <div className="space-y-4">
-
-          
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
               studentViewCoursesList.map((courseItem) => (
-                <Card onClick={() => navigate(`/course/details/${courseItem?._id}`)} className="cursor-pointer" key={courseItem._id}>
+                <Card
+                  onClick={() => navigate(`/course/details/${courseItem?._id}`)}
+                  className="cursor-pointer"
+                  key={courseItem._id}
+                >
                   <CardContent className="flex gap-4 p-4">
                     <div className="w-48 h-32 flex-shrink-0">
                       <img
@@ -234,8 +241,10 @@ useEffect(() => {
                   </CardContent>
                 </Card>
               ))
-            ) : loading ? (<Skeleton /> ) : (
-              <h1 className="font-extrabold text-4xl" >No Course Found</h1>
+            ) : loading ? (
+              <Skeleton />
+            ) : (
+              <h1 className="font-extrabold text-4xl">No Course Found</h1>
             )}
           </div>
         </main>
