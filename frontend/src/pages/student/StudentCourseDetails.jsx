@@ -1,7 +1,8 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { StudentContext } from "@/context/studentContext";
 import { fetchStudentViewCourseDetailsService } from "@/services";
-import { Globe } from "lucide-react";
+import { CheckCircle, Globe } from "lucide-react";
 import React, { useContext, useEffect } from "react";
 import { useParams } from "react-router-dom";
 
@@ -71,7 +72,27 @@ const StudentCourseDetails = () => {
         </div>
       </div>
 
-
+      <div className="flex flex-col md:flex-row gap-8 mt-8">
+        <main className="flex-grow">
+          <Card className="mb-8">
+            <CardHeader>
+              <CardTitle>What you'll learn</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                {studentViewCourseDetails?.objectives
+                  .split(",")
+                  .map((objective, index) => (
+                    <li key={index} className="flex items-start">
+                      <CheckCircle className="mr-2 h-5 w-5 text-green-500 flex-shrink-0" />
+                      <span>{objective}</span>
+                    </li>
+                  ))}
+              </ul>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
     </div>
   );
 };
