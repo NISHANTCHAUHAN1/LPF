@@ -9,6 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
+import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config";
 import { StudentContext } from "@/context/studentContext";
 import { fetchStudentViewCourseListService } from "@/services";
@@ -33,7 +34,7 @@ const StudentCourseView = () => {
     return queryParams.join("&");
   }
 
-  const { studentViewCoursesList, setStudentViewCoursesList } =
+  const { studentViewCoursesList, setStudentViewCoursesList, loading, setLoading } =
     useContext(StudentContext);
 
   //   function handleFilterOnChange(getSectionId, getCurrentOption) {
@@ -88,7 +89,11 @@ const StudentCourseView = () => {
       sortBy: sort,
     });
     const response = await fetchStudentViewCourseListService(query);
-    if (response?.success) setStudentViewCoursesList(response?.data);
+    if (response?.success) {
+      setStudentViewCoursesList(response?.data);
+      setLoading(false);
+    }
+    
   }
 
   useEffect(() => {
@@ -192,6 +197,8 @@ useEffect(() => {
           </div>
 
           <div className="space-y-4">
+
+          
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
               studentViewCoursesList.map((courseItem) => (
                 <Card className="cursor-pointer" key={courseItem._id}>
@@ -226,8 +233,8 @@ useEffect(() => {
                   </CardContent>
                 </Card>
               ))
-            ) : (
-              <h1>No Course Found</h1>
+            ) : loading ? (<Skeleton /> ) : (
+              <h1 className="font-extrabold text-4xl" >No Course Found</h1>
             )}
           </div>
         </main>
