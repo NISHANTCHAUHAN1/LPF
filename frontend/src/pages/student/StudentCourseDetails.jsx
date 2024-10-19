@@ -12,7 +12,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/videoPlayer/indedx";
 import { AuthContext } from "@/context/authContext";
 import { StudentContext } from "@/context/studentContext";
-import { fetchStudentViewCourseDetailsService } from "@/services";
+import {
+  createPaymentService,
+  fetchStudentViewCourseDetailsService,
+} from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -29,11 +32,14 @@ const StudentCourseDetails = () => {
 
   console.log(studentViewCourseDetails);
 
-  const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] = useState(null);
+  const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] =
+    useState(null);
 
   const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
-  const { auth }  = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
+  const [approvalUrl, setApprovalUrl] = useState("");
 
+  // const { id } = useParams();
   const { id } = useParams();
 
   async function fetchStudentViewCourseDetails() {
@@ -56,7 +62,34 @@ const StudentCourseDetails = () => {
   }
 
   async function handleCreatePayment() {
-    const paymentPayload = {}
+    const paymentPayload = {
+      userId: auth?.user?._id,
+      userName: auth?.user?.userName,
+      userEmail: auth?.user?.userEmail,
+      orderStatus: "pending",
+      paymentMethod: "paypal",
+      paymentStatus: "initiated",
+      orderDate: new Date(),
+      paymentId: "",
+      payerId: "",
+      instructorId: studentViewCourseDetails?.instructorId,
+      instructorName: studentViewCourseDetails?.instructorName,
+      courseImage: studentViewCourseDetails?.image,
+      courseTitle: studentViewCourseDetails?.title,
+      courseId: studentViewCourseDetails?._id,
+      coursePricing: studentViewCourseDetails?.pricing,
+    };
+
+    console.log(paymentPayload, "paymentPayload");
+    const response = await createPaymentService(paymentPayload);
+
+    if (response.success) {
+      sessionStorage.setItem(
+        "currentOrderId",
+        JSON.stringify(response?.data?.orderId)
+      );
+      setApprovalUrl(response?.data?.approveUrl);
+    }
   }
 
   useEffect(() => {
@@ -64,18 +97,18 @@ const StudentCourseDetails = () => {
   }, [displayCurrentVideoFreePreview]);
 
   useEffect(() => {
-    if (currentCourseDetailsId !== null) {
-      fetchStudentViewCourseDetails(currentCourseDetailsId);
-    }
+    if (currentCourseDetailsId !== null) fetchStudentViewCourseDetails();
   }, [currentCourseDetailsId]);
 
   useEffect(() => {
-    if (id) {
-      setCurrentCourseDetailsId(id);
-    }
+    if (id) setCurrentCourseDetailsId(id);
   }, [id]);
 
   if (loading) return <Skeleton />;
+
+  if (approvalUrl !== "") {
+    window.location.href = approvalUrl;
+  }
 
   const getIndexOfFreePreviewUrl =
     studentViewCourseDetails !== null
@@ -190,7 +223,9 @@ const StudentCourseDetails = () => {
                   ${studentViewCourseDetails?.pricing}
                 </span>
               </div>
-              <Button onClick={handleCreatePayment} className="w-full">Buy Now 💰</Button>
+              <Button onClick={handleCreatePayment} className="w-full">
+                Buy Now 💰
+              </Button>
             </CardContent>
           </Card>
         </aside>
@@ -215,10 +250,21 @@ const StudentCourseDetails = () => {
             />
           </div>
           <div className="flex flex-col gap-2">
-            {studentViewCourseDetails?.curriculum
+            {/* {studentViewCourseDetails?.curriculum
               ?.filter((item) => item.freePreview)
               .map((filterItem) => (
                 <p
+                  onClick={() => handleSetFreePreview(filterItem)}
+                  className="cursor-pointer text-[16px] font-medium"
+                >
+                  Demo {filterItem?.title}
+                </p>
+              ))} */}
+            {studentViewCourseDetails?.curriculum
+              ?.filter((item) => item.freePreview)
+              .map((filterItem, index) => (
+                <p
+                  key={filterItem.id || index} // Use index as fallback
                   onClick={() => handleSetFreePreview(filterItem)}
                   className="cursor-pointer text-[16px] font-medium"
                 >

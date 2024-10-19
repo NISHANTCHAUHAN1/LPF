@@ -1,5 +1,5 @@
 import { Order } from "../../models/Order.js";
-import paypal from "paypal-rest-sdk";
+import paypal from "../../helpers/paypal.js";
 import { StudentCourses } from "../../models/StudentCourses.js";
 import { Course } from "../../models/Course.js";
 
@@ -13,6 +13,8 @@ export const createOrder = async (req, res) => {
       paymentMethod,
       paymentStatus,
       orderDate,
+      paymentId,
+      payerId,
       instructorId,
       instructorName,
       courseImage,
@@ -37,7 +39,7 @@ export const createOrder = async (req, res) => {
               {
                 name: courseTitle,
                 sku: courseId,
-                price: parseFloat(coursePricing).toFixed(2),
+                price: coursePricing,
                 currency: "USD",
                 quantity: 1,
               },
@@ -45,68 +47,62 @@ export const createOrder = async (req, res) => {
           },
           amount: {
             currency: "USD",
-            total: parseFloat(coursePricing).toFixed(2),
+            total: coursePricing.toFixed(2),
           },
           description: courseTitle,
         },
       ],
     };
 
-    const createPayment = (paymentJson) =>
-      new Promise((resolve, reject) => {
-        paypal.payment.create(paymentJson, (error, payment) => {
-          if (error) reject(error);
-          else resolve(payment);
+    paypal.payment.create(create_payment_json, async (error, paymentInfo) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json({
+          success: false,
+          message: "Error while creating paypal payment!",
         });
-      });
+      } else {
+        const newlyCreatedCourseOrder = new Order({
+          userId,
+          userName,
+          userEmail,
+          orderStatus,
+          paymentMethod,
+          paymentStatus,
+          orderDate,
+          paymentId,
+          payerId,
+          instructorId,
+          instructorName,
+          courseImage,
+          courseTitle,
+          courseId,
+          coursePricing,
+        });
 
-    const paymentInfo = await createPayment(create_payment_json);
+        await newlyCreatedCourseOrder.save();
 
-    const approveUrl = paymentInfo?.links?.find(
-      (link) => link.rel === "approval_url"
-    )?.href;
+        const approveUrl = paymentInfo.links.find(
+          (link) => link.rel == "approval_url"
+        ).href;
 
-    if (!approveUrl) {
-      return res.status(500).json({
-        success: false,
-        message: "Approval URL not found!",
-      });
-    }
-
-    const newOrder = new Order({
-      userId,
-      userName,
-      userEmail,
-      orderStatus: orderStatus || "pending",
-      paymentMethod,
-      paymentStatus: paymentStatus || "pending",
-      orderDate,
-      instructorId,
-      instructorName,
-      courseImage,
-      courseTitle,
-      courseId,
-      coursePricing,
+        res.status(201).json({
+          success: true,
+          data: {
+            approveUrl,
+            orderId: newlyCreatedCourseOrder._id,
+          },
+        });
+      }
     });
-
-    await newOrder.save();
-
-    res.status(201).json({
-      success: true,
-      data: {
-        approveUrl,
-        orderId: newOrder._id,
-      },
-    });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    console.log(err);
     res.status(500).json({
       success: false,
-      message: "Some error occurred!",
+      message: "Some error occured!",
     });
   }
 };
-
 
 export const capturePaymentAndFinalizeOrder = async (req, res) => {
   try {
@@ -145,7 +141,6 @@ export const capturePaymentAndFinalizeOrder = async (req, res) => {
         courseImage: order.courseImage,
       });
       await studentCourses.save();
-
     } else {
       const newStudentCourses = new StudentCourses({
         userId: order.userId,
@@ -166,21 +161,20 @@ export const capturePaymentAndFinalizeOrder = async (req, res) => {
     //update the course schema To see how many students have bought the course and who they are.
     await Course.findByIdAndUpdate(order.courseId, {
       $addToSet: {
-        students : {
+        students: {
           studentId: order.userId,
           studentName: order.userName,
           studentEmail: order.userEmail,
           paidAmount: order.coursePricing,
-        }
-      }
-    })
+        },
+      },
+    });
 
     res.status(200).json({
       success: true,
       message: "Order confirmed",
       data: order,
     });
-
   } catch (error) {
     console.log(error);
     res.status(500).json({
