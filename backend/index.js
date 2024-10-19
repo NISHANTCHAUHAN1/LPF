@@ -29,12 +29,14 @@ import mediaRoutes from './routes/instructorRoutes/mediaRoutes.js'
 import courseRoutes from './routes/instructorRoutes/courseRoutes.js'
 import studentCourseRoutes from './routes/studentRoute/studentCourseRoute.js'
 import orderRoutes from './routes/studentRoute/orderRoute.js'
+import buyCourseRoutes from './routes/studentRoute/buyCoursrRoute.js'
 
 app.use("/auth", authRoute);
 app.use("/media", mediaRoutes);
 app.use("/instructor/course", courseRoutes);
 app.use("/student/course", studentCourseRoutes);
 app.use("/student/order", orderRoutes);
+app.use("/student/courses-bought", buyCourseRoutes);
 
 
 app.use((err, req, res, next) => {
