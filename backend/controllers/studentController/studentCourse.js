@@ -1,6 +1,6 @@
 // course controller
-
 import { Course } from "../../models/Course.js";
+import { StudentCourses } from "../../models/StudentCourses.js";
 
 export const getAllStudentViewCourses = async (req, res) => {
   try {
@@ -81,6 +81,26 @@ export const getStudentViewCourseDetails = async (req, res) => {
     });
   } catch (e) {
     console.log(e);
+    res.status(500).json({
+      success: false,
+      message: "Some error occured!",
+    });
+  }
+};
+
+// check the current student purchased a course or not 
+export const checkCoursePurchaseInfo = async (req, res) => {
+  try {
+    const { id, studentId } = req.params;
+    const studentCourses = await StudentCourses.findOne({ userId: studentId });
+
+    const ifStudentAlreadyBoughtCurrentCourse =
+      studentCourses.courses.findIndex((item) => item.courseId === id) > -1;
+    res
+      .status(200)
+      .json({ success: true, data: ifStudentAlreadyBoughtCurrentCourse });
+  } catch (error) {
+    console.log(error);
     res.status(500).json({
       success: false,
       message: "Some error occured!",
