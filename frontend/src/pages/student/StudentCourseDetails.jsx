@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import VideoPlayer from "@/components/videoPlayer/indedx";
+import { AuthContext } from "@/context/authContext";
 import { StudentContext } from "@/context/studentContext";
 import { fetchStudentViewCourseDetailsService } from "@/services";
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
@@ -28,9 +29,10 @@ const StudentCourseDetails = () => {
 
   console.log(studentViewCourseDetails);
 
-  const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] =
-    useState(null);
+  const [displayCurrentVideoFreePreview, setDisplayCurrentVideoFreePreview] = useState(null);
+
   const [showFreePreviewDialog, setShowFreePreviewDialog] = useState(false);
+  const { auth }  = useContext(AuthContext);
 
   const { id } = useParams();
 
@@ -51,6 +53,10 @@ const StudentCourseDetails = () => {
   function handleSetFreePreview(getCurrentVideoInfo) {
     // console.log(getCurrentVideoInfo);
     setDisplayCurrentVideoFreePreview(getCurrentVideoInfo?.videoUrl);
+  }
+
+  async function handleCreatePayment() {
+    const paymentPayload = {}
   }
 
   useEffect(() => {
@@ -184,7 +190,7 @@ const StudentCourseDetails = () => {
                   ${studentViewCourseDetails?.pricing}
                 </span>
               </div>
-              <Button className="w-full">Buy Now 💰</Button>
+              <Button onClick={handleCreatePayment} className="w-full">Buy Now 💰</Button>
             </CardContent>
           </Card>
         </aside>
