@@ -1,3 +1,5 @@
+// student filter page 
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -11,8 +13,9 @@ import {
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config";
+import { AuthContext } from "@/context/authContext";
 import { StudentContext } from "@/context/studentContext";
-import { fetchStudentViewCourseListService } from "@/services";
+import { checkCoursePurchaseInfoService, fetchStudentViewCourseListService } from "@/services";
 import { ArrowDownUpIcon } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -22,6 +25,8 @@ const StudentCourseView = () => {
   const [filters, setFilters] = useState({});
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
+
+  const { auth } = useContext(AuthContext);
 
   function createSearchParamsHelper(filterParams) {
     const queryParams = [];
@@ -42,48 +47,18 @@ const StudentCourseView = () => {
     setLoading,
   } = useContext(StudentContext);
 
-  //   function handleFilterOnChange(getSectionId, getCurrentOption) {
-  //     let cpyFilters = { ...filters };
-  //     const indexOfCurrentSection = Object.keys(cpyFilters).indexOf(getSectionId);
-  //     console.log(indexOfCurrentSection, getSectionId);
-  //     if (indexOfCurrentSection === -1) {
-  //       cpyFilters = {
-  //         ...cpyFilters,
-  //         [getSectionId]: [getCurrentOption.id],
-  //       };
-  //       console.log(cpyFilters);
-  //     } else {
-  //       const indexOfCurrentOption = cpyFilters[getSectionId].indexOf(
-  //         getCurrentOption.id
-  //       );
-  //       if (indexOfCurrentOption === -1)
-  //         cpyFilters[getSectionId].push(getCurrentOption.id);
-  //       else cpyFilters[getSectionId].splice(indexOfCurrentOption, 1);
-  //     }
-  //     setFilters(cpyFilters);
-  //     sessionStorage.setItem("filters", JSON.stringify(cpyFilters));
-  //   }
-
   function handleFilterOnChange(sectionId, option) {
-    // Create a copy of the filters object to avoid mutations
     let updatedFilters = { ...filters };
-
-    // If the section does not exist, create it with the selected option
     if (!updatedFilters[sectionId]) {
       updatedFilters[sectionId] = [option.id];
     } else {
-      // If the section exists, find the index of the option
       const optionIndex = updatedFilters[sectionId].indexOf(option.id);
-
-      // Add the option if it's not present, or remove it if it is
       if (optionIndex === -1) {
         updatedFilters[sectionId].push(option.id);
       } else {
         updatedFilters[sectionId].splice(optionIndex, 1);
       }
     }
-
-    // Update the state and store the filters in sessionStorage
     setFilters(updatedFilters);
     sessionStorage.setItem("filters", JSON.stringify(updatedFilters));
   }
@@ -99,6 +74,21 @@ const StudentCourseView = () => {
       setLoading(false);
     }
   }
+
+  async function handleCourseNavigate(getCurrentCourseId) {
+    const response = await checkCoursePurchaseInfoService(getCurrentCourseId, auth?.user?._id);
+    console.log(response);
+    
+
+    if(response?.success) {
+      if(response?.data) {
+        navigate(`/course-progress/${getCurrentCourseId}`)
+      } else{
+        navigate(`/course/details/${getCurrentCourseId}`);
+      }
+    }
+  }
+
 
   useEffect(() => {
     const buildQueryStringForFilters = createSearchParamsHelper(filters);
@@ -138,17 +128,6 @@ const StudentCourseView = () => {
                       className="flex font-medium items-center gap-3"
                       key={`${ketItem}-${option.id || index}`}
                     >
-                      {/* <Checkbox
-                        checked={
-                            filters &&
-                            Object.keys(filters).length > 0 &&
-                            filters[ketItem] &&
-                            filters[ketItem].indexOf(option.id) > -1
-                          }
-                        onCheckedChange={() =>
-                          handleFilterOnChange(ketItem, option)
-                        }
-                      /> */}
                       <Checkbox
                         checked={
                           filters?.[ketItem]?.includes(option.id) || false
@@ -206,7 +185,8 @@ const StudentCourseView = () => {
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
               studentViewCoursesList.map((courseItem) => (
                 <Card
-                  onClick={() => navigate(`/course/details/${courseItem?._id}`)}
+                  // onClick={() => navigate(`/course/details/${courseItem?._id}`)}
+                  onClick={() => handleCourseNavigate(courseItem?._id)}
                   className="cursor-pointer"
                   key={courseItem._id}
                 >
