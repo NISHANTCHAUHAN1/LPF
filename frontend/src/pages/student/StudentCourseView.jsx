@@ -47,6 +47,8 @@ const StudentCourseView = () => {
     setLoading,
   } = useContext(StudentContext);
 
+  
+
   function handleFilterOnChange(sectionId, option) {
     let updatedFilters = { ...filters };
     if (!updatedFilters[sectionId]) {

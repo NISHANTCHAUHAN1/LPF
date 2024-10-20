@@ -117,7 +117,7 @@ const StudentCourseDetails = () => {
         )
       : -1;
 
-  // console.log(getIndexOfFreePreviewUrl, studentViewCourseDetails?.curriculum[getIndexOfFreePreviewUrl]);
+ 
 
   return (
     <div className=" mx-auto p-4">
@@ -250,16 +250,6 @@ const StudentCourseDetails = () => {
             />
           </div>
           <div className="flex flex-col gap-2">
-            {/* {studentViewCourseDetails?.curriculum
-              ?.filter((item) => item.freePreview)
-              .map((filterItem) => (
-                <p
-                  onClick={() => handleSetFreePreview(filterItem)}
-                  className="cursor-pointer text-[16px] font-medium"
-                >
-                  Demo {filterItem?.title}
-                </p>
-              ))} */}
             {studentViewCourseDetails?.curriculum
               ?.filter((item) => item.freePreview)
               .map((filterItem, index) => (
