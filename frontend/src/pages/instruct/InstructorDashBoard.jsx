@@ -31,7 +31,7 @@ const InstructorDashBoard = () => {
       icon: BarChart,
       label: "Dashboard",
       value: "dashboard",
-      component: <Instructordash />,
+      component: <Instructordash listOfCourse={instructorCoursesList} />,
     },
     {
       icon: Book,
@@ -52,6 +52,8 @@ const InstructorDashBoard = () => {
     sessionStorage.clear();
   };
 
+  console.log(instructorCoursesList, "instructorCoursesList");
+  
   return (
     <div className="flex h-full min-h-screen bg-gray-100">
       <aside className="w-64 bg-white shadow-md hidden md:block">
