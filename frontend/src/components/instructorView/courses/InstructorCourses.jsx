@@ -71,9 +71,9 @@ const InstructorCourses = ({ listOfCourse }) => {
                           <Edit className="h-6 w-6" />
                         </Button>
 
-                        <Button variant="ghost" size="sm">
+                        {/* <Button variant="ghost" size="sm">
                           <Delete className="h-6 w-6" />
-                        </Button>
+                        </Button> */}
                       </TableCell>
                     </TableRow>
                   ))

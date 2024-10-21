@@ -47,7 +47,7 @@ const StudentCourseView = () => {
     setLoading,
   } = useContext(StudentContext);
 
-  
+  // console.log(studentViewCoursesList);
 
   function handleFilterOnChange(sectionId, option) {
     let updatedFilters = { ...filters };
@@ -78,20 +78,26 @@ const StudentCourseView = () => {
   }
 
   async function handleCourseNavigate(getCurrentCourseId) {
-    const response = await checkCoursePurchaseInfoService(getCurrentCourseId, auth?.user?._id);
-    console.log(response);
-    
-
-    if(response?.success) {
-      if(response?.data) {
-        navigate(`/course-progress/${getCurrentCourseId}`)
-      } else{
-        navigate(`/course/details/${getCurrentCourseId}`);
+    try {
+      const response = await checkCoursePurchaseInfoService(
+        getCurrentCourseId,
+        auth?.user?._id
+      );
+  
+      if (response?.success) {
+        if (response?.data) {
+          navigate(`/course-progress/${getCurrentCourseId}`);
+        } else {
+          navigate(`/course/details/${getCurrentCourseId}`);
+        }
+      } else {
+        console.error('Failed to fetch course purchase info.');
       }
+    } catch (error) {
+      console.error('Error navigating course:', error);
     }
   }
-
-
+  
   useEffect(() => {
     const buildQueryStringForFilters = createSearchParamsHelper(filters);
     setSearchParams(new URLSearchParams(buildQueryStringForFilters));
