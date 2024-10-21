@@ -1,3 +1,4 @@
+// my course page
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { AuthContext } from "@/context/authContext";
