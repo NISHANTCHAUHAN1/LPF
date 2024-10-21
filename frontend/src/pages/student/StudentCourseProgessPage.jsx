@@ -66,7 +66,7 @@ const StudentCourseProgessPage = () => {
     if (showConfetti) setTimeout(() => setShowConfetti(false), 15000);
   }, [showConfetti]);
 
-  // console.log(studentCurrentCourseProgress, "studentCurrentCourseProgress");
+  console.log(studentCurrentCourseProgress, "studentCurrentCourseProgress");
   console.log(currentLecture, "currentLecture");
   
 

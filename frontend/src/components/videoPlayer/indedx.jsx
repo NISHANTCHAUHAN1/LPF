@@ -114,6 +114,15 @@ function VideoPlayer({
     };
   }, []);
 
+  useEffect(() => {
+    if (playedVideo === 1) {
+      onProgressUpdate({
+        ...progressData,
+        progressValue: playedVideo,
+      });
+    }
+  }, [playedVideo]);
+
   return (
     <div
       ref={playerContainerRef}

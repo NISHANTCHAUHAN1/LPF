@@ -1,10 +1,12 @@
 import { Course } from "../../models/Course.js";
 import { CourseProgress } from "../../models/CourseProgress.js";
 import { StudentCourses } from "../../models/StudentCourses.js";
+
+
 // mark current lecture as viewed
 
-// get current course progress
 
+// get current course progress
 export const getCurrentCourseProgress = async (req, res) => {
   try {
     const { userId, courseId } = req.params;
