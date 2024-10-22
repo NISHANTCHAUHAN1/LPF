@@ -2,6 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { initialSignInFormData, initialSignUpFormData } from "@/config";
 import { checkAuthService, loginService, registerService } from "@/services";
 import { createContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
 export const AuthContext = createContext(null);
 
 export default function AuthProvider({ children }) {
@@ -17,30 +18,35 @@ export default function AuthProvider({ children }) {
   const handleRegister = async (e) => {
     e.preventDefault();
     const data = await registerService(signUpFormData);
+    toast.success(data.message); 
     // console.log(data);
   };
 
   const handleLoginUser = async (e) => {
     e.preventDefault();
-    const data = await loginService(signInFormData);
-    // console.log(data);
-    if (data.success) {
-      sessionStorage.setItem(
-        "accessToken",
-        JSON.stringify(data.data.accessToken)
-      );
-      setAuth({
-        authenticate: true,
-        user: data.data.user,
-      });
-    } else {
-      setAuth({
-        authenticate: false,
-        user: null,
-      });
+  
+    try {
+      const data = await loginService(signInFormData);
+      if (data.success) {
+        sessionStorage.setItem(
+          "accessToken",
+          JSON.stringify(data.data.accessToken)
+        );
+        setAuth({
+          authenticate: true,
+          user: data.data.user,
+        });
+        toast.success(data.message);
+      } else {
+        setAuth({ authenticate: false, user: null });
+        toast.error(data.message || "An error occurred during login."); 
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      toast.error("check Email Password is True or Not  !.");
     }
   };
-
+  
   // check auth
   const checkAuthUser = async () => {
     try {
@@ -101,3 +107,5 @@ export default function AuthProvider({ children }) {
     </AuthContext.Provider>
   );
 }
+
+
