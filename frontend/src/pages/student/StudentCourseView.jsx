@@ -1,4 +1,4 @@
-// student filter page 
+// student filter page
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
@@ -15,7 +15,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { filterOptions, sortOptions } from "@/config";
 import { AuthContext } from "@/context/authContext";
 import { StudentContext } from "@/context/studentContext";
-import { checkCoursePurchaseInfoService, fetchStudentViewCourseListService } from "@/services";
+import {
+  checkCoursePurchaseInfoService,
+  fetchStudentViewCourseListService,
+} from "@/services";
 import { ArrowDownUpIcon } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
@@ -83,7 +86,7 @@ const StudentCourseView = () => {
         getCurrentCourseId,
         auth?.user?._id
       );
-  
+
       if (response?.success) {
         if (response?.data) {
           navigate(`/course-progress/${getCurrentCourseId}`);
@@ -91,13 +94,13 @@ const StudentCourseView = () => {
           navigate(`/course/details/${getCurrentCourseId}`);
         }
       } else {
-        console.error('Failed to fetch course purchase info.');
+        console.error("Failed to fetch course purchase info.");
       }
     } catch (error) {
-      console.error('Error navigating course:', error);
+      console.error("Error navigating course:", error);
     }
   }
-  
+
   useEffect(() => {
     const buildQueryStringForFilters = createSearchParamsHelper(filters);
     setSearchParams(new URLSearchParams(buildQueryStringForFilters));
@@ -232,7 +235,14 @@ const StudentCourseView = () => {
             ) : loading ? (
               <Skeleton />
             ) : (
-              <h1 className="font-extrabold text-4xl">No Course Found</h1>
+              <div className="text-center">
+                <img
+                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTcKcoquPvJ-O9WfgEYiUF34hYhzaGcrtamQ&s"
+                  alt="No courses"
+                  className="mx-auto mb-4"
+                />
+                <h1 className="font-extrabold text-4xl">No Course Found</h1>
+              </div>
             )}
           </div>
         </main>

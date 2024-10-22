@@ -47,10 +47,10 @@ const StudentCoursePage = () => {
               </CardContent>
 
               <CardFooter>
-              <Button
-              onClick={() =>
-                navigate(`/course-progress/${course?.courseId}`)
-              }
+                <Button
+                  onClick={() =>
+                    navigate(`/course-progress/${course?.courseId}`)
+                  }
                   className="flex-1"
                 >
                   <Watch className="mr-2 h-4 w-4" />
@@ -60,7 +60,14 @@ const StudentCoursePage = () => {
             </Card>
           ))
         ) : (
-          <h1 className="text-3xl font-bold">No Courses found</h1>
+          <div className="text-center">
+            <img
+              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTTcKcoquPvJ-O9WfgEYiUF34hYhzaGcrtamQ&s"
+              alt="No courses"
+              className="mx-auto mb-4"
+            />
+            <h1 className="text-3xl font-bold">No Courses found</h1>
+          </div>
         )}
       </div>
     </div>
