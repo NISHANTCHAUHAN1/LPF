@@ -20,6 +20,7 @@ import {
 import { CheckCircle, Globe, Lock, PlayCircle } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { LoadingAnimation } from "../Loading/Loading";
 
 const StudentCourseDetails = () => {
   const {
@@ -30,6 +31,8 @@ const StudentCourseDetails = () => {
     loading,
     setLoading,
   } = useContext(StudentContext);
+
+  const [btnLoading, setBtnLoading] = useState(false);
 
   console.log(studentViewCourseDetails);
 
@@ -62,7 +65,41 @@ const StudentCourseDetails = () => {
     setDisplayCurrentVideoFreePreview(getCurrentVideoInfo?.videoUrl);
   }
 
-  async function handleCreatePayment() {
+  // async function handleCreatePayment() {
+  //   const paymentPayload = {
+  //     userId: auth?.user?._id,
+  //     userName: auth?.user?.userName,
+  //     userEmail: auth?.user?.userEmail,
+  //     orderStatus: "pending",
+  //     paymentMethod: "paypal",
+  //     paymentStatus: "initiated",
+  //     orderDate: new Date(),
+  //     paymentId: "",
+  //     payerId: "",
+  //     instructorId: studentViewCourseDetails?.instructorId,
+  //     instructorName: studentViewCourseDetails?.instructorName,
+  //     courseImage: studentViewCourseDetails?.image,
+  //     courseTitle: studentViewCourseDetails?.title,
+  //     courseId: studentViewCourseDetails?._id,
+  //     coursePricing: studentViewCourseDetails?.pricing,
+  //   };
+
+  //   console.log(paymentPayload, "paymentPayload");
+  //   const response = await createPaymentService(paymentPayload);
+
+  //   if (response.success) {
+  //     sessionStorage.setItem(
+  //       "currentOrderId",
+  //       JSON.stringify(response?.data?.orderId)
+  //     );
+  //     setApprovalUrl(response?.data?.approveUrl);
+  //   }
+  // }
+
+async function handleCreatePayment() {
+  try {
+    setBtnLoading(true); 
+
     const paymentPayload = {
       userId: auth?.user?._id,
       userName: auth?.user?.userName,
@@ -82,6 +119,7 @@ const StudentCourseDetails = () => {
     };
 
     console.log(paymentPayload, "paymentPayload");
+
     const response = await createPaymentService(paymentPayload);
 
     if (response.success) {
@@ -90,8 +128,15 @@ const StudentCourseDetails = () => {
         JSON.stringify(response?.data?.orderId)
       );
       setApprovalUrl(response?.data?.approveUrl);
+      setBtnLoading(false);
     }
+  } catch (error) {
+    console.error("Payment creation failed:", error);
+  } finally {
+    setBtnLoading(false); 
   }
+}
+
 
   useEffect(() => {
     if (displayCurrentVideoFreePreview !== null) setShowFreePreviewDialog(true);
@@ -225,7 +270,7 @@ const StudentCourseDetails = () => {
                 </span>
               </div>
               <Button onClick={handleCreatePayment} className="w-full">
-                Buy Now 💰
+              {btnLoading ? <LoadingAnimation /> : "Buy Now 💰"}
               </Button>
             </CardContent>
           </Card>
