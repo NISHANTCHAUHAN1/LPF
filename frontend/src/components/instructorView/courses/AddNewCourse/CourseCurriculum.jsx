@@ -190,9 +190,11 @@ const CourseCurriculum = () => {
 
   return (
     <Card>
-      <CardHeader className="flex flex-row justify-between">
-        <CardTitle>Create Course Curriculum</CardTitle>
-        <div>
+      <CardHeader className="flex flex-col sm:flex-row justify-between items-start sm:items-center">
+        <CardTitle className="text-lg sm:text-xl font-semibold">
+          Create Course Curriculum
+        </CardTitle>
+        <div className="mt-2 sm:mt-0">
           <Input
             type="file"
             ref={bulkUploadInputRef}
@@ -219,6 +221,7 @@ const CourseCurriculum = () => {
         <Button
           disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgess}
           onClick={handleNewLecture}
+          className="mb-4"
         >
           Add Lecture
         </Button>
@@ -230,48 +233,54 @@ const CourseCurriculum = () => {
         ) : null}
         <div className="mt-4 space-y-4">
           {courseCurriculumFormData.map((curriculumItem, index) => (
-            <div className="border p-5 rounded-md" key={index}>
-              <div className="flex gap-5 items-center">
-                <h3 className="font-semibold">Lecture {index + 1} </h3>
+            <div
+              className="border p-5 rounded-md flex flex-col sm:flex-row"
+              key={index}
+            >
+              <div className="flex-1">
+                <h3 className="font-semibold">Lecture {index + 1}</h3>
                 <Input
                   name={`title-${index + 1}`}
                   placeholder="Enter lecture title"
-                  className="max-w-96"
+                  className="max-w-full sm:max-w-96"
                   onChange={(event) => handleCourseTitleChange(event, index)}
                   value={courseCurriculumFormData[index]?.title}
                 />
-
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    onCheckedChange={(value) =>
-                      handleFreePreviewChange(value, index)
-                    }
-                    checked={courseCurriculumFormData[index]?.freePreview}
-                    id={`freePreview-${index + 1}`}
-                  />
-                  <Label htmlFor={`freePreview-${index + 1}`}>
-                    Free Preview
-                  </Label>
-                </div>
+              </div>
+              <div className="flex items-center space-x-2 mt-2 sm:mt-0 sm:ml-4">
+                <Switch
+                  onCheckedChange={(value) =>
+                    handleFreePreviewChange(value, index)
+                  }
+                  checked={courseCurriculumFormData[index]?.freePreview}
+                  id={`freePreview-${index + 1}`}
+                />
+                <Label htmlFor={`freePreview-${index + 1}`}>Free Preview</Label>
               </div>
 
               <div className="mt-6">
                 {courseCurriculumFormData[index]?.videoUrl ? (
-                  <div className="flex gap-3">
+                  <div className="flex flex-col sm:flex-row gap-3">
                     <VideoPlayer
                       url={courseCurriculumFormData[index]?.videoUrl}
-                      width="450px"
+                      width="100%"
                       height="200px"
+                      className="flex-1"
                     />
-                    <Button onClick={() => handleReplaceVideo(index)}>
-                      Replace Video
-                    </Button>
-                    <Button
-                      onClick={() => handleDeleteLecture(index)}
-                      className="bg-red-900"
-                    >
-                      Delete Lecture
-                    </Button>
+                    <div className="flex flex-col space-y-2">
+                      <Button
+                        onClick={() => handleReplaceVideo(index)}
+                        className="w-full"
+                      >
+                        Replace Video
+                      </Button>
+                      <Button
+                        onClick={() => handleDeleteLecture(index)}
+                        className="bg-red-900 w-full"
+                      >
+                        Delete Lecture
+                      </Button>
+                    </div>
                   </div>
                 ) : (
                   <Input
