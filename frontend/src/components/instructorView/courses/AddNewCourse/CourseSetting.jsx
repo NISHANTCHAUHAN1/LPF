@@ -41,6 +41,9 @@ const CourseSetting = () => {
     }
   }
 
+ 
+
+
   console.log(courseLandingFormData);
 
   return (
@@ -72,6 +75,7 @@ const CourseSetting = () => {
           </div>
         )}
       </CardContent>
+
     </Card>
   );
 };
