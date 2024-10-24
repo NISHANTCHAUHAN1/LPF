@@ -216,7 +216,7 @@ const CourseCurriculum = () => {
       </CardHeader>
       <CardContent>
         <Button
-          disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgress}
+          disabled={!isCourseCurriculumFormDataValid() || mediaUploadProgess}
           onClick={handleNewLecture}
         >
           Add Lecture
