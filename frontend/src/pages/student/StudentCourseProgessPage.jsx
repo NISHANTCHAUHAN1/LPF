@@ -96,7 +96,7 @@ const StudentCourseProgessPage = () => {
       auth?.user?._id,
       studentCurrentCourseProgress?.courseDetails?._id
     );
-    if(response?.success) {
+    if (response?.success) {
       setCurrentLecture(null);
       setShowConfetti(false);
       setShowCourseCompleteDialog(false);
@@ -224,10 +224,24 @@ const StudentCourseProgessPage = () => {
       </div>
 
       <Dialog open={lockCourse}>
-        <DialogContent className="w-full max-w-sm mx-auto p-6 sm:w-[425px]">
+        {/* <DialogContent className="w-full max-w-sm mx-auto p-6 sm:w-[425px]">
           <DialogHeader>
             <DialogTitle>You can't view this page</DialogTitle>
             <DialogDescription>
+              Please purchase this course to get access
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent> */}
+
+        <DialogContent className="w-full max-w-sm mx-auto p-6 sm:w-[425px]">
+          <DialogHeader>
+            <DialogTitle>You can't view this page</DialogTitle>
+            <img
+              src="https://media1.tenor.com/m/E4CNjMOebw8AAAAC/laughing-baby.gif"
+              alt="Laughing baby"
+              className="w-32 h-32 mx-auto my-4"
+            />
+            <DialogDescription className="font-bold">
               Please purchase this course to get access
             </DialogDescription>
           </DialogHeader>
