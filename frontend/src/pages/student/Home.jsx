@@ -100,7 +100,8 @@ const Home = () => {
                 <div
                   key={index}
                   onClick={() => handleCourseNavigate(courseItem?._id)}
-                  className="border rounded-lg overflow-hidden shadow cursor-pointer"
+                  className="border rounded-lg overflow-hidden shadow cursor-pointer transform
+                   transition duration-300 ease-in-out hover:shadow-lg hover:scale-105"
                 >
                   <img
                     src={courseItem?.image}
@@ -125,6 +126,39 @@ const Home = () => {
             )}
           </div>
         </section>
+
+{/* <section className="py-12 px-4 lg:px-8">
+  <h2 className="text-2xl font-bold mb-6">Featured Courses</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+    {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
+      studentViewCoursesList.map((courseItem, index) => (
+        <div
+          key={index}
+          onClick={() => handleCourseNavigate(courseItem?._id)}
+          className="border rounded-lg overflow-hidden shadow cursor-pointer transform transition duration-300 hover:scale-105 hover:shadow-lg"
+        >
+          <img
+            src={courseItem?.image}
+            width={300}
+            height={150}
+            className="w-full h-40 object-cover transition duration-300 hover:opacity-90"
+            alt="courseImg"
+          />
+          <div className="p-4">
+            <h3 className="font-bold mb-2">{courseItem?.title}</h3>
+            <p className="text-sm text-gray-700 mb-2">
+              {courseItem?.instructorName}
+            </p>
+            <p className="font-bold text-[16px]">${courseItem?.pricing}</p>
+          </div>
+        </div>
+      ))
+    ) : (
+      <h1>No Course Found</h1>
+    )}
+  </div>
+</section> */}
+
       </div>
 
       <footer className="bg-white text-gray-800 py-4 px-6 border-t border-gray-300">

@@ -38,7 +38,7 @@ const StudentCoursePage = () => {
                 <img
                   src={course?.courseImage}
                   alt={course?.title}
-                  className="h-52 w-full object-cover rounded-md mb-4"
+                  className="border rounded-lg overflow-hidden shadow cursor-pointer transform transition duration-300 ease-in-out hover:shadow-lg hover:scale-105"
                 />
                 <h3 className="font-bold mb-1">{course?.title}</h3>
                 <p className="text-sm text-gray-700 mb-2">

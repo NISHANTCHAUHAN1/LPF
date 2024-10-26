@@ -30,14 +30,23 @@ const PaymentReturnPage = () => {
     }
   }, [payerId, paymentId]);
 
-//   console.log(params);
+  //   console.log(params);
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Processing payment... Please wait</CardTitle>
-      </CardHeader>
-    </Card>
+    <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <Card className="w-full max-w-md p-6 border rounded-lg shadow-md bg-white">
+        <CardHeader className="flex flex-col items-center">
+          <img
+            src="https://img.freepik.com/premium-vector/processing-icon-simple-element-illustration-processing-concept-symbol-design-from-analytics-research-collection-can-be-used-web-mobile_159242-12214.jpg"
+            alt="Processing"
+            className="w-32 h-32 mb-4"
+          />
+          <CardTitle className="text-lg font-semibold text-gray-700">
+            Processing payment... Please wait
+          </CardTitle>
+        </CardHeader>
+      </Card>
+    </div>
   );
 };
 

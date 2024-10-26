@@ -32,9 +32,10 @@ function VideoPlayer({
   const playerContainerRef = useRef(null);
   const controlsTimeoutRef = useRef(null);
 
-  function handlePlayAndPause() {
-    setPlaying(!playing);
-  }
+  // use
+  // function handlePlayAndPause() {
+  //   setPlaying(!playing);
+  // }
 
   function handleProgress(state) {
     if (!seeking) {
@@ -42,59 +43,59 @@ function VideoPlayer({
     }
   }
 
-  function handleRewind() {
-    playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() - 5);
-  }
+  // function handleRewind() {
+  //   playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() - 5);
+  // }
 
-  function handleForward() {
-    playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() + 5);
-  }
+  // function handleForward() {
+  //   playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() + 5);
+  // }
 
-  function handleToggleMute() {
-    setMuted(!muted);
-  }
+  // function handleToggleMute() {
+  //   setMuted(!muted);
+  // }
 
-  function handleSeekChange(newValue) {
-    setPlayedVideo(newValue[0]);
-    setSeeking(true);
-  }
+  // function handleSeekChange(newValue) {
+  //   setPlayedVideo(newValue[0]);
+  //   setSeeking(true);
+  // }
 
-  function handleSeekMouseUp() {
-    setSeeking(false);
-    playerRef.current?.seekTo(playedVideo);
-  }
+  // function handleSeekMouseUp() {
+  //   setSeeking(false);
+  //   playerRef.current?.seekTo(playedVideo);
+  // }
 
-  function handleVolumeChange(newValue) {
-    setVolume(newValue[0]);
-  }
+  // function handleVolumeChange(newValue) {
+  //   setVolume(newValue[0]);
+  // }
 
-  function pad(string) {
-    return ("0" + string).slice(-2);
-  }
+  // function pad(string) {
+  //   return ("0" + string).slice(-2);
+  // }
 
-  function formatTime(seconds) {
-    const date = new Date(seconds * 1000);
-    const hh = date.getUTCHours();
-    const mm = date.getUTCMinutes();
-    const ss = pad(date.getUTCSeconds());
+  // function formatTime(seconds) {
+  //   const date = new Date(seconds * 1000);
+  //   const hh = date.getUTCHours();
+  //   const mm = date.getUTCMinutes();
+  //   const ss = pad(date.getUTCSeconds());
 
-    if (hh) {
-      return `${hh}:${pad(mm)}:${ss}`;
-    }
-    return `${mm}:${ss}`;
-  }
+  //   if (hh) {
+  //     return `${hh}:${pad(mm)}:${ss}`;
+  //   }
+  //   return `${mm}:${ss}`;
+  // }
 
-  const handleFullScreen = useCallback(() => {
-    if (!isFullScreen) {
-      if (playerContainerRef?.current.requestFullscreen) {
-        playerContainerRef?.current?.requestFullscreen();
-      }
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-      }
-    }
-  }, [isFullScreen]);
+  // const handleFullScreen = useCallback(() => {
+  //   if (!isFullScreen) {
+  //     if (playerContainerRef?.current.requestFullscreen) {
+  //       playerContainerRef?.current?.requestFullscreen();
+  //     }
+  //   } else {
+  //     if (document.exitFullscreen) {
+  //       document.exitFullscreen();
+  //     }
+  //   }
+  // }, [isFullScreen]);
 
   function handleMouseMove() {
     setShowControls(true);
@@ -102,17 +103,17 @@ function VideoPlayer({
     controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 2000);
   }
 
-  useEffect(() => {
-    const handleFullScreenChange = () => {
-      setIsFullScreen(document.fullscreenElement);
-    };
+  // useEffect(() => {
+  //   const handleFullScreenChange = () => {
+  //     setIsFullScreen(document.fullscreenElement);
+  //   };
 
-    document.addEventListener("fullscreenchange", handleFullScreenChange);
+  //   document.addEventListener("fullscreenchange", handleFullScreenChange);
 
-    return () => {
-      document.removeEventListener("fullscreenchange", handleFullScreenChange);
-    };
-  }, []);
+  //   return () => {
+  //     document.removeEventListener("fullscreenchange", handleFullScreenChange);
+  //   };
+  // }, []);
 
   useEffect(() => {
     if (playedVideo === 1) {
@@ -143,9 +144,9 @@ function VideoPlayer({
         volume={volume}
         muted={muted}
         onProgress={handleProgress}
-        // controls
+        controls
       />
-      {showControls && (
+      {/* {showControls && (
         <div
           className={`absolute bottom-0 left-0 right-0 bg-gray-800 bg-opacity-75 p-4 transition-opacity duration-300 ${
             showControls ? "opacity-100" : "opacity-0"
@@ -236,7 +237,7 @@ function VideoPlayer({
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }
