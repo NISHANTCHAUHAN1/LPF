@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
 import Auth from "./pages/auth/auth";
 import RouteProtected from "./components/routeProtect/RouteProtect";
@@ -13,9 +13,22 @@ import StudentCourseDetails from "./pages/student/StudentCourseDetails";
 import PaymentReturnPage from "./pages/student/PaymentReturnPage";
 import StudentCoursePage from "./pages/student/StudentCoursePage";
 import StudentCourseProgessPage from "./pages/student/StudentCourseProgessPage";
+import LoadingScreen from "./components/LoadingScreen/LoadingScreen";
 
 const App = () => {
   const { auth } = useContext(AuthContext);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate a network request or delay
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 3000); // 3 seconds delay
+  }, []);
+
+  if (isLoading) {
+    return <LoadingScreen />;
+  }
 
   return (
     <Routes>
