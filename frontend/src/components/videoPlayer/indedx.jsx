@@ -33,69 +33,74 @@ function VideoPlayer({
   const controlsTimeoutRef = useRef(null);
 
   // use
-  // function handlePlayAndPause() {
-  //   setPlaying(!playing);
-  // }
+  function handlePlayAndPause() {
+    setPlaying(!playing);
+  }
 
+  
   function handleProgress(state) {
     if (!seeking) {
-      setPlayedVideo(state.played);
+      setPlayedVideo(state.played); // Update progress value
     }
   }
 
-  // function handleRewind() {
-  //   playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() - 5);
-  // }
+  // start
 
-  // function handleForward() {
-  //   playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() + 5);
-  // }
+  function handleRewind() {
+    playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() - 5);
+  }
 
-  // function handleToggleMute() {
-  //   setMuted(!muted);
-  // }
+  function handleForward() {
+    playerRef?.current?.seekTo(playerRef?.current?.getCurrentTime() + 5);
+  }
 
-  // function handleSeekChange(newValue) {
-  //   setPlayedVideo(newValue[0]);
-  //   setSeeking(true);
-  // }
+  function handleToggleMute() {
+    setMuted(!muted);
+  }
 
-  // function handleSeekMouseUp() {
-  //   setSeeking(false);
-  //   playerRef.current?.seekTo(playedVideo);
-  // }
+  function handleSeekChange(newValue) {
+    setPlayedVideo(newValue[0]);
+    setSeeking(true);
+  }
 
-  // function handleVolumeChange(newValue) {
-  //   setVolume(newValue[0]);
-  // }
+  function handleSeekMouseUp() {
+    setSeeking(false);
+    playerRef.current?.seekTo(playedVideo);
+  }
 
-  // function pad(string) {
-  //   return ("0" + string).slice(-2);
-  // }
+  function handleVolumeChange(newValue) {
+    setVolume(newValue[0]);
+  }
 
-  // function formatTime(seconds) {
-  //   const date = new Date(seconds * 1000);
-  //   const hh = date.getUTCHours();
-  //   const mm = date.getUTCMinutes();
-  //   const ss = pad(date.getUTCSeconds());
+  function pad(string) {
+    return ("0" + string).slice(-2);
+  }
 
-  //   if (hh) {
-  //     return `${hh}:${pad(mm)}:${ss}`;
-  //   }
-  //   return `${mm}:${ss}`;
-  // }
+  function formatTime(seconds) {
+    const date = new Date(seconds * 1000);
+    const hh = date.getUTCHours();
+    const mm = date.getUTCMinutes();
+    const ss = pad(date.getUTCSeconds());
 
-  // const handleFullScreen = useCallback(() => {
-  //   if (!isFullScreen) {
-  //     if (playerContainerRef?.current.requestFullscreen) {
-  //       playerContainerRef?.current?.requestFullscreen();
-  //     }
-  //   } else {
-  //     if (document.exitFullscreen) {
-  //       document.exitFullscreen();
-  //     }
-  //   }
-  // }, [isFullScreen]);
+    if (hh) {
+      return `${hh}:${pad(mm)}:${ss}`;
+    }
+    return `${mm}:${ss}`;
+  }
+
+  const handleFullScreen = useCallback(() => {
+    if (!isFullScreen) {
+      if (playerContainerRef?.current.requestFullscreen) {
+        playerContainerRef?.current?.requestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }, [isFullScreen]);
+
+  // end
 
   function handleMouseMove() {
     setShowControls(true);
@@ -103,17 +108,17 @@ function VideoPlayer({
     controlsTimeoutRef.current = setTimeout(() => setShowControls(false), 2000);
   }
 
-  // useEffect(() => {
-  //   const handleFullScreenChange = () => {
-  //     setIsFullScreen(document.fullscreenElement);
-  //   };
+  useEffect(() => {
+    const handleFullScreenChange = () => {
+      setIsFullScreen(document.fullscreenElement);
+    };
 
-  //   document.addEventListener("fullscreenchange", handleFullScreenChange);
+    document.addEventListener("fullscreenchange", handleFullScreenChange);
 
-  //   return () => {
-  //     document.removeEventListener("fullscreenchange", handleFullScreenChange);
-  //   };
-  // }, []);
+    return () => {
+      document.removeEventListener("fullscreenchange", handleFullScreenChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (playedVideo === 1) {
