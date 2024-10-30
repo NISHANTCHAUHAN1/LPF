@@ -19,7 +19,7 @@ import {
   checkCoursePurchaseInfoService,
   fetchStudentViewCourseListService,
 } from "@/services";
-import { ArrowDownUpIcon } from "lucide-react";
+import { ArrowDownUpIcon, ArrowUpDownIcon, Globe } from "lucide-react";
 import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 
@@ -126,24 +126,22 @@ const StudentCourseView = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl md:text-3xl font-bold mb-4">All Courses</h1>
-
-      <div className="flex flex-col lg:flex-row gap-6">
-        {/* Sidebar */}
-        <aside className="w-full lg:w-64 space-y-6">
+      <h1 className="text-3xl font-bold mb-4">All Courses</h1>
+      <div className="flex flex-col md:flex-row gap-4">
+        <aside className="w-full md:w-64 space-y-4">
           <div>
             {Object.keys(filterOptions).map((ketItem) => (
-              <div className="p-4 border-b" key={ketItem}>
+              <div className="p-4 border-b">
                 <h3 className="font-bold mb-3">{ketItem.toUpperCase()}</h3>
                 <div className="grid gap-2 mt-2">
-                  {filterOptions[ketItem].map((option, index) => (
-                    <Label
-                      className="flex font-medium items-center gap-3"
-                      key={`${ketItem}-${option.id || index}`}
-                    >
+                  {filterOptions[ketItem].map((option) => (
+                    <Label className="flex font-medium items-center gap-3">
                       <Checkbox
                         checked={
-                          filters?.[ketItem]?.includes(option.id) || false
+                          filters &&
+                          Object.keys(filters).length > 0 &&
+                          filters[ketItem] &&
+                          filters[ketItem].indexOf(option.id) > -1
                         }
                         onCheckedChange={() =>
                           handleFilterOnChange(ketItem, option)
@@ -157,18 +155,16 @@ const StudentCourseView = () => {
             ))}
           </div>
         </aside>
-
-        {/* Main Content */}
         <main className="flex-1">
-          <div className="flex flex-wrap justify-between items-center mb-4 gap-3">
+          <div className="flex justify-end items-center mb-4 gap-5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
                   variant="outline"
                   size="sm"
-                  className="flex items-center gap-2 px-4 py-2"
+                  className="flex items-center gap-2 p-5"
                 >
-                  <ArrowDownUpIcon className="h-4 w-4" />
+                  <ArrowUpDownIcon className="h-4 w-4" />
                   <span className="text-[16px] font-medium">Sort By</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -188,31 +184,27 @@ const StudentCourseView = () => {
                 </DropdownMenuRadioGroup>
               </DropdownMenuContent>
             </DropdownMenu>
-
-            <span className="text-sm font-bold text-gray-700">
-              {studentViewCoursesList.length} Courses
+            <span className="text-sm text-black font-bold">
+              {studentViewCoursesList.length} Results
             </span>
           </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="space-y-4">
             {studentViewCoursesList && studentViewCoursesList.length > 0 ? (
               studentViewCoursesList.map((courseItem) => (
                 <Card
                   onClick={() => handleCourseNavigate(courseItem?._id)}
-                 className="border rounded-lg overflow-hidden shadow cursor-pointer transform 
-                 transition duration-300 ease-in-out hover:shadow-lg hover:scale-105"
-                  key={courseItem._id}
+                  className="cursor-pointer"
+                  key={courseItem?._id}
                 >
                   <CardContent className="flex gap-4 p-4">
-                    <div className="w-36 h-24 md:w-48 md:h-32 flex-shrink-0">
+                    <div className="w-48 h-32 flex-shrink-0">
                       <img
                         src={courseItem?.image}
-                        className="w-full h-full object-cover"
-                        alt="Course"
+                        className="w-ful h-full object-cover"
                       />
                     </div>
                     <div className="flex-1">
-                      <CardTitle className="text-lg md:text-xl mb-2">
+                      <CardTitle className="text-xl mb-2">
                         {courseItem?.title}
                       </CardTitle>
                       <p className="text-sm text-gray-600 mb-1">
@@ -221,7 +213,7 @@ const StudentCourseView = () => {
                           {courseItem?.instructorName}
                         </span>
                       </p>
-                      <p className="text-[14px] md:text-[16px] text-gray-600 mt-2 mb-2">
+                      <p className="text-[16px] text-gray-600 mt-3 mb-2">
                         {`${courseItem?.curriculum?.length} ${
                           courseItem?.curriculum?.length <= 1
                             ? "Lecture"

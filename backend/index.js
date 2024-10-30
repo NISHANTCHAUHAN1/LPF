@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import connectDb from "./Database/db.js";
 import path from "path";
+import { fileURLToPath } from 'url';
+
 
 dotenv.config();
 
@@ -11,7 +13,8 @@ const app = express();
 
 const port = process.env.PORT || 5000;
 
-const __dirname = path.resolve();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 app.use(
   cors({
@@ -43,10 +46,11 @@ app.use("/student/courses-bought", buyCourseRoutes);
 app.use("/student/course-progress", CourseProgressRoutes);
 
 
-app.use(express.static(path.join(__dirname, "/frontend/dist")));
-app.get("*", (req,res)=>{
-    res.sendFile(path.resolve(__dirname, "frontend", "dist", "index.html"));
-})
+app.use(express.static(path.join(__dirname, "../frontend/dist")));
+app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
+});
+
 
 
 app.use((err, req, res, next) => {
