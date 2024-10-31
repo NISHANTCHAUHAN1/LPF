@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Route, Routes } from "react-router-dom";
-import Auth from "./pages/auth/auth";
+import Auth from "./pages/auth/Auth";
 import RouteProtected from "./components/routeProtect/RouteProtect";
 import { AuthContext } from "./context/authContext";
 import InstructorDashBoard from "./pages/instruct/InstructorDashBoard";
