@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import InstructorCourses from "@/components/instructorView/courses/InstructorCourses";
-import Instructordash from "@/components/instructorView/dashboard/instructordash";
+import Instructordash from "@/components/instructorView/dashboard/Instructordash";
 import { Button } from "@/components/ui/button";
 import { BarChart, Book, LogOut } from "lucide-react";
 import { Tabs, TabsContent } from "@/components/ui/tabs";
