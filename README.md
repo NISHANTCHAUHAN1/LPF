@@ -6,7 +6,17 @@ This is a feature-rich learning platform built with the MERN stack, including an
 
 - Login/Logout System: Secure authentication ensures personalized project access and management.
 - Admin Panel: Create, edit, and manage courses easily.
-
-<!-- <img src="" alt="" /> -->
+- Payment Gateway: Integrated PayPal for secure transactions.
+- Media Uploads: Supports single and bulk image/video uploads via Cloudinary.
+- Animations: Smooth transitions using Framer Motion.
+- UI Styling: Modern design with Tailwind CSS and shadcn/ui.
+- User-Friendly Interface: Designed for easy navigation, with improvements planned for responsiveness.
 
 ## Tech Stack
+
+- **Frontend:** React, Tailwind CSS, shadcn/ui, Framer Motion
+- **Backend:** Node.js, Express
+- **Database:**  MongoDB
+- **Cloud Services:** Cloudinary for media uploads
+- **Payment Gateway:** PayPal
+
