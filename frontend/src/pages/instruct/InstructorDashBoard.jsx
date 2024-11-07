@@ -15,8 +15,6 @@ const InstructorDashBoard = () => {
 
   async function fetchAllCourses() {
     const response = await fetchInstructorCourseListService();
-    // console.log(response);
-    
     if(response?.success) {
       setInstructorCoursesList(response?.data);
     }
