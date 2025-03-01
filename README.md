@@ -1,4 +1,4 @@
-# Learning Management System - MERN Stack
+# Course Management System - MERN Stack
 
 This is a feature-rich learning platform built with the MERN stack, including an admin panel for managing courses, PayPal for secure payments, and Cloudinary for media uploads. The platform offers a sleek user interface with Tailwind CSS, shadcn/ui, and Framer Motion animations.
 
