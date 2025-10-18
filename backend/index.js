@@ -45,13 +45,10 @@ app.use("/student/order", orderRoutes);
 app.use("/student/courses-bought", buyCourseRoutes);
 app.use("/student/course-progress", CourseProgressRoutes);
 
-
-app.use(express.static(path.join(__dirname, "../frontend/dist")));
-app.get("*", (req, res) => {
-    res.sendFile(path.resolve(__dirname, "../frontend", "dist", "index.html"));
+// Health check route
+app.get("/", (req, res) => {
+  res.send("LMS Backend is running!");
 });
-
-
 
 app.use((err, req, res, next) => {
   console.log(err.stack);
@@ -61,16 +58,7 @@ app.use((err, req, res, next) => {
   });
 });
 
-// app.listen(port, () => {
-//   console.log(`Server is running on http://localhost:${port}`);
-//   connectDb();
-// });
-// --- Health check ---
-app.get("/", (req, res) => {
-  res.send({ message: `Server is running on PORT ${process.env.PORT || 8080}` });
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+  connectDb();
 });
-
-connectDb(); // Just call database connection when module loads
-
-export default app; // Vercel uses this export for requests
-
