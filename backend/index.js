@@ -65,6 +65,10 @@ app.use((err, req, res, next) => {
 //   console.log(`Server is running on http://localhost:${port}`);
 //   connectDb();
 // });
+// --- Health check ---
+app.get("/", (req, res) => {
+  res.send({ message: `Server is running on PORT ${process.env.PORT || 8080}` });
+});
 
 connectDb(); // Just call database connection when module loads
 
