@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const axiosInstance = axios.create({
-  baseURL: "https://studyclub.onrender.com",
+  baseURL: "http://localhost:5000",
 });
 
 axiosInstance.interceptors.request.use(
